@@ -1,7 +1,22 @@
 # step 3 · 预览站与 GitHub Pages 部署
 
-> 状态：**预览站已完成并可部署；AI 判分闭环待私有部署**
+> 状态：**✅ 已部署上线** —— https://jeremythierrychan.github.io/Esotericism/
 > 对应代码：`apps/preview`（纯静态）｜`packages/domain/src/layer4`（Attempt/Evidence）｜`packages/domain/src/judges.ts`
+
+---
+
+## 零、部署结果（2026-09-19）
+
+| 项 | 结果 |
+|---|---|
+| 站点地址 | **https://jeremythierrychan.github.io/Esotericism/** |
+| GitHub Actions run | **#3 全绿**（build 12 步 + deploy 2 步，全部 success） |
+| 站点资源实测 | `/` 200 · `index.html` 200 · JS 147KB 200 · CSS 3.9KB 200 · `.nojekyll` 200 |
+| 打包产物内容核对 | JS 内含内容库（`木生火`）、规则 id（`rule.wuxing.shengke`）、`offline-skeleton`、`historicity` |
+| `noindex` | ✅ 已生效（`noindex, nofollow, noarchive`） |
+| 仓库可见性 | **公开**（按你的确认执行，见 §二 的合规说明） |
+
+**部署过程共修 2 个 CI bug，见 §四。**
 
 ---
 
@@ -89,36 +104,37 @@ GitHub Pages 的实际情况：
 
 ### 部署实测记录（两次运行，逐步骤结果）
 
-| 步骤 | 第 1 次 | 第 2 次 | 说明 |
-|---|---|---|---|
-| checkout | ✓ | ✓ | |
-| **pnpm/action-setup** | **✗** | ✓ | 第 1 次死在「重复指定 pnpm 版本」 |
-| setup-node | skip | ✓ | |
-| Install | skip | ✓ | `--frozen-lockfile` |
-| **Typecheck** | skip | **✓** | 三个包 |
-| **Test** | skip | **✓** | 119 条，在 GitHub runner 上真实通过 |
-| **Validate content library** | skip | **✓** | 14 条 CI 规则 |
-| **Build preview** | skip | **✓** | 含产物冒烟测试 |
-| Add .nojekyll | skip | ✓ | |
-| **configure-pages** | skip | **✗** | 权限不足（见下） |
-| upload-pages-artifact / deploy | skip | skip | 被上一步阻断 |
+| 步骤 | #1 | #2 | #3 | 说明 |
+|---|---|---|---|---|
+| checkout | ✓ | ✓ | ✓ | |
+| **pnpm/action-setup** | **✗** | ✓ | ✓ | #1 死在「重复指定 pnpm 版本」 |
+| setup-node / Install | skip | ✓ | ✓ | `--frozen-lockfile` |
+| **Typecheck** | skip | **✓** | **✓** | 三个包 |
+| **Test** | skip | **✓** | **✓** | 119 条，在 GitHub runner 上真实通过 |
+| **Validate content library** | skip | **✓** | **✓** | 14 条 CI 规则 |
+| **Build preview** | skip | **✓** | **✓** | 含产物冒烟测试 |
+| Add .nojekyll | skip | ✓ | ✓ | |
+| **configure-pages** | skip | **✗** | **✓** | #2 权限不足；Pages 开启后通过 |
+| upload-pages-artifact | skip | skip | **✓** | |
+| **deploy** | skip | skip | **✓** | 上线 |
+
+> **注意 #3 是通过「等你开 Pages」+「重推一次」解决的，不是靠改代码。** #2 之后的失败原因是外部状态，不是配置错误。
 
 **第一个 bug（已修）：** `pnpm/action-setup@v4` 在根 `package.json` 已有
 `"packageManager": "pnpm@11.24.0"` 时**拒绝**再接收 `version` 输入
 （`Multiple versions of pnpm specified`）。我两处都写了版本号 → 删掉 `version`，版本只在一处声明。
 
-**第二个 bug（需你点一下）：** `configure-pages` 加 `enablement: true` 想让它自己开 Pages，
-但**「启用 Pages」是仓库设置操作，`GITHUB_TOKEN` 没有该权限** →
-`Resource not accessible by integration`。
+**第二个 bug（已修，且验证了这是外部状态而非配置错误）：** `configure-pages` 曾加
+`enablement: true` 想让它自己开 Pages，但**「启用 Pages」是仓库设置操作，`GITHUB_TOKEN` 没有该权限**
+→ `Resource not accessible by integration`。已删掉该参数；你在 Settings → Pages 手工开启一次后，
+同一步骤即通过（#3 证实）。
 
-### ⚠️ 还需你做的一步（GitHub 不允许 API 代替仓库管理员授权）
+### ✅ 已完成：Pages 已开启，部署成功
 
-**Settings → Pages → Build and deployment → Source 选 `GitHub Actions`**，然后
-**Actions 标签页 → 最新一次运行 → Re-run all jobs**（重跑用的是已修好的 workflow）。
+你已在 Settings → Pages 把 Source 设为 GitHub Actions；推送后 workflow 自动运行并成功。
 
-站点地址：**https://jeremythierrychan.github.io/Esotericism/**
-
-> Actions 本身**已经启用**（否则不会有运行记录）—— 只需开 Pages 这一项。
+**当前流水线行为：** 之后每次推送到 `main` 且改动命中 `apps/preview/**`、`packages/**`、`.github/workflows/pages.yml` 时自动重新部署。
+**任何一步失败都不会发布** —— 旧版本继续在线。
 
 ### 原来的手动方式（备查）
 
