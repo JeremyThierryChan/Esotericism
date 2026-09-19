@@ -179,7 +179,9 @@ describe('答案来自内容库真值表（生成器不是真理来源）', () =
   it('关系表不完整时**拒绝生成**，而不是把「查不到」当成「无作用关系」', () => {
     const b = bundleWithTemplate();
     // 删掉一条边 → 表不完整
-    b.relations = b.relations.filter((r) => !(r.from_symbol_id === 'sym.wuxing.木' && r.to_symbol_id === 'sym.wuxing.火'));
+    b.relations = b.relations.filter(
+      (r) => !(r.type === 'related_by' && r.from_symbol_id === 'sym.wuxing.木' && r.to_symbol_id === 'sym.wuxing.火'),
+    );
     const report = generateExercises(b);
     expect(report.instances).toHaveLength(0);
     expect(report.byTemplate[0]?.skipped.join()).toContain('关系表不完整');
@@ -187,7 +189,9 @@ describe('答案来自内容库真值表（生成器不是真理来源）', () =
 
   it('CI 规则 R18 兜住同一件事（构建期拦截）', () => {
     const b = bundleWithTemplate();
-    b.relations = b.relations.filter((r) => !(r.from_symbol_id === 'sym.wuxing.木' && r.to_symbol_id === 'sym.wuxing.火'));
+    b.relations = b.relations.filter(
+      (r) => !(r.type === 'related_by' && r.from_symbol_id === 'sym.wuxing.木' && r.to_symbol_id === 'sym.wuxing.火'),
+    );
     expect(validateBundle(b).errors.map((e) => e.rule)).toContain('R18');
   });
 });

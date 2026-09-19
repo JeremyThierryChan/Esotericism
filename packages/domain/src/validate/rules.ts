@@ -15,6 +15,7 @@
  */
 import type { ContentBundle } from '../bundle.js';
 import { isSameFormalismEdge } from '../derive.js';
+import { confusableWithEdges, relatedByEdges } from '../layer1/relation.js';
 import {
   HYBRID_JUDGING_MODES,
   RUBRIC_JUDGING_MODES,
@@ -131,12 +132,15 @@ function checkProvenance(
   }
 
   if (prov.review_status === 'draft' && !hasSources(prov)) {
+    const isTeachingHypothesis = entityId.startsWith('confusable_with ');
     issues.push({
       rule: 'R1c',
       severity: 'warning',
       entity_kind: entityKind,
       entity_id: entityId,
-      message: 'draft 条目无来源：允许存在，但不得升级为 reviewed',
+      message: isTeachingHypothesis
+        ? '教学假设无文献来源（这是正常的）：它的验证方式是**实测数据**，不是文献。因此它永远不能靠文献升 reviewed —— 只能靠 `verifications` 记「证实/证否」'
+        : 'draft 条目无来源：允许存在，但不得升级为 reviewed',
       basis: RULE_BASIS.R1,
     });
   }
@@ -189,7 +193,21 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     ['skill', bundle.skills],
     ['rubric', bundle.rubrics],
     ['assessment_spec', bundle.assessment_specs],
-    ['relation', bundle.relations as never],
+    // 关系边没有 `id` 字段（它们由两端标识），所以要合成一个可读标签 ——
+    // 否则 R1c 的报错会显示 `relation:undefined`，等于没告诉人哪一条有问题。
+    [
+      'relation',
+      [
+        ...relatedByEdges(bundle.relations).map((r) => ({
+          id: `related_by ${r.from_symbol_id}→${r.to_symbol_id}`,
+          provenance: r.provenance,
+        })),
+        ...confusableWithEdges(bundle.relations).map((r) => ({
+          id: `confusable_with ${r.from_node_id}~${r.to_node_id}`,
+          provenance: r.provenance,
+        })),
+      ],
+    ],
   ];
   for (const [kind, items] of layer0Groups) {
     for (const it of items) checkProvenance(issues, kind, it.id, it.provenance);
@@ -423,8 +441,30 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     ref('R10', 'has_attribute', `${h.symbol_id}/${h.space_id}`, `value symbol（${h.value_symbol_id}）`, symbolIds.has(h.value_symbol_id));
   }
   for (const r of bundle.relations) {
-    ref('R10', 'relation', `${r.from_symbol_id}->${r.to_symbol_id}`, `symbol（${r.from_symbol_id}）`, symbolIds.has(r.from_symbol_id));
-    ref('R10', 'relation', `${r.from_symbol_id}->${r.to_symbol_id}`, `symbol（${r.to_symbol_id}）`, symbolIds.has(r.to_symbol_id));
+    if (r.type === 'related_by') {
+      ref('R10', 'relation', `${r.from_symbol_id}->${r.to_symbol_id}`, `symbol（${r.from_symbol_id}）`, symbolIds.has(r.from_symbol_id));
+      ref('R10', 'relation', `${r.from_symbol_id}->${r.to_symbol_id}`, `symbol（${r.to_symbol_id}）`, symbolIds.has(r.to_symbol_id));
+    } else {
+      // confusable_with：两端可以是 Symbol 或 Concept
+      const conceptIds = new Set(bundle.concepts.map((c) => c.id));
+      const exists = (id: string) => symbolIds.has(id) || conceptIds.has(id);
+      ref('R10', 'relation', `confusable ${r.from_node_id}~${r.to_node_id}`, `symbol/concept（${r.from_node_id}）`, exists(r.from_node_id));
+      ref('R10', 'relation', `confusable ${r.from_node_id}~${r.to_node_id}`, `symbol/concept（${r.to_node_id}）`, exists(r.to_node_id));
+      if (r.from_node_id === r.to_node_id) {
+        issues.push({
+          rule: 'R10', severity: 'error', entity_kind: 'relation', entity_id: `confusable ${r.from_node_id}`,
+          message: 'confusable_with 的两端不能是同一个节点', basis: RULE_BASIS.R10,
+        });
+      }
+    }
+  }
+
+  // R10 补：Skill.confusable_with_skill_ids 此前**没有引用完整性校验**，
+  // 于是内容库里留了一条悬空引用（指向不存在的 skill）而 CI 没拦住。
+  for (const sk of bundle.skills) {
+    for (const cid of sk.confusable_with_skill_ids) {
+      ref('R10', 'skill', sk.id, `confusable skill（${cid}）`, skillIds.has(cid));
+    }
   }
   for (const spec of bundle.assessment_specs) {
     for (const sid of spec.skill_ids) ref('R10', 'assessment_spec', spec.id, `skill（${sid}）`, skillIds.has(sid));
@@ -729,9 +769,8 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
           const key = [a, b].sort().join('|');
           if (seenPairs.has(key)) continue;
           seenPairs.add(key);
-          const has = bundle.relations.some(
-            (r) =>
-              (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
+          const has = relatedByEdges(bundle.relations).some(
+            (r) => (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
           );
           if (!has) missing.push(`${a}↔${b}`);
         }

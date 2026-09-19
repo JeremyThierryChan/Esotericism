@@ -18,6 +18,7 @@ import {
   type Exercise,
   type LlmCaller,
 } from '@dlg/domain';
+import { isRelatedBy } from '@dlg/domain';
 import { loadBundle } from '../src/load.js';
 
 let bundle: ContentBundle;
@@ -79,7 +80,9 @@ describe('规则判分 · 真跑（AI 不介入）', () => {
     // 复制一份内容库，把「木生火」这条边删掉
     const mutated: ContentBundle = {
       ...b,
-      relations: b.relations.filter((r) => !(r.from_symbol_id === 'sym.wuxing.木' && r.to_symbol_id === 'sym.wuxing.火')),
+      relations: b.relations.filter(
+        (r) => !(isRelatedBy(r) && r.from_symbol_id === 'sym.wuxing.木' && r.to_symbol_id === 'sym.wuxing.火'),
+      ),
     };
     const mutatedJudge = createRuleJudge({ bundle: mutated });
     const record = mutatedJudge.judge(ex, { a: '木', b: '火' });

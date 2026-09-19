@@ -16,6 +16,7 @@
  * 因此不得引入任何 Node 专有 API。这一点由 `apps/preview` 的构建来验证。
  */
 import type { ContentBundle } from '../bundle.js';
+import { relatedByEdges } from '../layer1/relation.js';
 
 export interface RuleEngineContext {
   bundle: ContentBundle;
@@ -89,7 +90,8 @@ export function resolveRelation(input: unknown, ctx: RuleEngineContext): Relatio
   if (idA === idB) return { relation: 'none', direction: 'none' };
 
   for (const subtype of ['生', '克'] as const) {
-    const edges = ctx.bundle.relations.filter((r) => r.subtype === subtype);
+    // 只取 related_by 边（relations 现在是 related_by | confusable_with 的联合）
+    const edges = relatedByEdges(ctx.bundle.relations).filter((r) => r.subtype === subtype);
     if (edges.some((r) => r.from_symbol_id === idA && r.to_symbol_id === idB)) {
       return { relation: subtype, direction: 'a→b', basis: `内容库 related_by/${subtype}：${idA} → ${idB}` };
     }

@@ -1520,6 +1520,74 @@
         "authored_by": "human",
         "version": 1
       }
+    },
+    {
+      "type": "confusable_with",
+      "from_node_id": "sym.bagua.乾",
+      "to_node_id": "sym.bagua.坤",
+      "rationale": "☰ 三阳 vs ☷ 三阴：全阳/全阴的两个极端，是八卦里唯一的「纯」卦，初学者容易只记住「两个特殊卦」而互换",
+      "expected_direction": "both",
+      "evidence_kind": "教学假设",
+      "provenance": {
+        "sources": [],
+        "source_strength": "低",
+        "controversy_flag": false,
+        "verifications": [],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "type": "confusable_with",
+      "from_node_id": "sym.bagua.震",
+      "to_node_id": "sym.bagua.艮",
+      "rationale": "☳ 震仰盂=初爻阳（100） vs ☶ 艮覆碗=上爻阳（001）：**互为镜像**，都只有一阳，位置相反 —— 位编码最容易记反的一对",
+      "expected_direction": "both",
+      "evidence_kind": "教学假设",
+      "provenance": {
+        "sources": [],
+        "source_strength": "低",
+        "controversy_flag": false,
+        "verifications": [],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "type": "confusable_with",
+      "from_node_id": "sym.bagua.巽",
+      "to_node_id": "sym.bagua.兑",
+      "rationale": "☴ 巽下斷=初爻阴（011） vs ☱ 兌上缺=上爻阴（110）：**互为镜像**，都只有一阴，位置相反",
+      "expected_direction": "both",
+      "evidence_kind": "教学假设",
+      "provenance": {
+        "sources": [],
+        "source_strength": "低",
+        "controversy_flag": false,
+        "verifications": [],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "type": "confusable_with",
+      "from_node_id": "sym.bagua.坎",
+      "to_node_id": "sym.bagua.离",
+      "rationale": "☵ 坎中滿=中爻阳（010） vs ☲ 離中虛=中爻阴（101）：**互为镜像**，中爻阴阳相反",
+      "expected_direction": "both",
+      "evidence_kind": "教学假设",
+      "provenance": {
+        "sources": [],
+        "source_strength": "低",
+        "controversy_flag": false,
+        "verifications": [],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
     }
   ],
   "rules": [
@@ -2983,9 +3051,7 @@
       "schema_ids": [
         "S4"
       ],
-      "confusable_with_skill_ids": [
-        "skill.b0.s4.four-elements-direction"
-      ],
+      "confusable_with_skill_ids": [],
       "provenance": {
         "sources": [
           {

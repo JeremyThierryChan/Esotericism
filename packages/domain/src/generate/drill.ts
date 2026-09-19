@@ -15,6 +15,7 @@ import type { ContentBundle } from '../bundle.js';
 import type { Exercise } from '../layer3/exercise.js';
 import type { ExerciseInstance, ExerciseTemplate } from '../layer3/exercise-template.js';
 import { RuleInputError, resolveRule, type RuleEngineContext } from '../rules/registry.js';
+import { relatedByEdges } from '../layer1/relation.js';
 
 export interface GenerateOptions {
   /** 只生成某个模板的题 */
@@ -184,9 +185,8 @@ export function generateExercises(bundle: ContentBundle, options: GenerateOption
             const key = [a, b].sort().join('|');
             if (seen.has(key)) continue;
             seen.add(key);
-            const has = bundle.relations.some(
-              (r) =>
-                (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
+            const has = relatedByEdges(bundle.relations).some(
+              (r) => (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
             );
             if (!has) missing.push(`${a}↔${b}`);
           }

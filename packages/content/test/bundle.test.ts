@@ -11,6 +11,7 @@ import {
   type ContentBundle,
   type ValidationReport,
 } from '@dlg/domain';
+import { relatedByEdges } from '@dlg/domain';
 import { loadBundle } from '../src/load.js';
 
 let bundle: ContentBundle;
@@ -71,15 +72,15 @@ describe('点 1 · B0 · S4 五行生克方向（ADR-0013 A 类样本）', () =>
   });
 
   it('生克是有向的 Symbol↔Symbol 关系（这正是 ADR-0010 要救回来的东西）', () => {
-    const sheng = bundle.relations.filter((r) => r.subtype === '生');
-    const ke = bundle.relations.filter((r) => r.subtype === '克');
+    const sheng = relatedByEdges(bundle.relations).filter((r) => r.subtype === '生');
+    const ke = relatedByEdges(bundle.relations).filter((r) => r.subtype === '克');
     expect(sheng).toHaveLength(5);
     expect(ke).toHaveLength(5);
-    expect(bundle.relations.every((r) => r.direction === 'forward')).toBe(true);
+    expect(relatedByEdges(bundle.relations).every((r) => r.direction === 'forward')).toBe(true);
   });
 
   it('相生闭循环成立：木→火→土→金→水→木', () => {
-    const sheng = bundle.relations.filter((r) => r.subtype === '生');
+    const sheng = relatedByEdges(bundle.relations).filter((r) => r.subtype === '生');
     const next = new Map(sheng.map((r) => [r.from_symbol_id, r.to_symbol_id]));
     let cur = 'sym.wuxing.木';
     const visited: string[] = [];
@@ -94,7 +95,7 @@ describe('点 1 · B0 · S4 五行生克方向（ADR-0013 A 类样本）', () =>
   });
 
   it('相克闭循环成立：木→土→水→火→金→木', () => {
-    const ke = bundle.relations.filter((r) => r.subtype === '克');
+    const ke = relatedByEdges(bundle.relations).filter((r) => r.subtype === '克');
     const next = new Map(ke.map((r) => [r.from_symbol_id, r.to_symbol_id]));
     let cur = 'sym.wuxing.木';
     for (let i = 0; i < 5; i++) {
@@ -127,8 +128,8 @@ describe('点 1 · B0 · S4 五行生克方向（ADR-0013 A 类样本）', () =>
     expect(ts).toBeDefined();
     expect(ts?.cases.length).toBeGreaterThanOrEqual(5);
     // 用一个最小规则引擎实现跑一遍验证集
-    const sheng = bundle.relations.filter((r) => r.subtype === '生').map((r) => [r.from_symbol_id, r.to_symbol_id]);
-    const ke = bundle.relations.filter((r) => r.subtype === '克').map((r) => [r.from_symbol_id, r.to_symbol_id]);
+    const sheng = relatedByEdges(bundle.relations).filter((r) => r.subtype === '生').map((r) => [r.from_symbol_id, r.to_symbol_id]);
+    const ke = relatedByEdges(bundle.relations).filter((r) => r.subtype === '克').map((r) => [r.from_symbol_id, r.to_symbol_id]);
     const idOf = (name: string) => `sym.wuxing.${name}`;
     const relationOf = (a: string, b: string) => {
       if (a === b) return { relation: 'none', direction: 'none' };
@@ -221,20 +222,20 @@ describe('R9 禁用语检查在真实内容上的表现', () => {
 
 describe('T1–T3 · 关系边必须可追溯（本轮补的缺口）', () => {
   it('每条关系边都有 provenance —— 它此前连来源字段都没有', () => {
-    expect(bundle.relations.length).toBeGreaterThan(0);
-    for (const r of bundle.relations) {
+    expect(relatedByEdges(bundle.relations).length).toBeGreaterThan(0);
+    for (const r of relatedByEdges(bundle.relations)) {
       expect(r.provenance, `${r.subtype} ${r.from_symbol_id}→${r.to_symbol_id} 缺 provenance`).toBeDefined();
     }
   });
 
   it('每条关系边都有非空 sources（无来源不入库）', () => {
-    for (const r of bundle.relations) {
+    for (const r of relatedByEdges(bundle.relations)) {
       expect(r.provenance.sources.length, `${r.subtype} 边无来源`).toBeGreaterThan(0);
     }
   });
 
   it('每条关系边都带复核记录，且记录可审计（有 claim / source / checked_at）', () => {
-    for (const r of bundle.relations) {
+    for (const r of relatedByEdges(bundle.relations)) {
       const vs = r.provenance.verifications;
       expect(vs.length, `${r.subtype} 边无复核记录`).toBeGreaterThan(0);
       for (const v of vs) {
@@ -247,7 +248,7 @@ describe('T1–T3 · 关系边必须可追溯（本轮补的缺口）', () => {
 
   it('复核结论必须明确，不得是「无法核实」却当作已核（那是待办不是结论）', () => {
     const all = [
-      ...bundle.relations.flatMap((r) => r.provenance.verifications),
+      ...relatedByEdges(bundle.relations).flatMap((r) => r.provenance.verifications),
       ...bundle.attribute_spaces.flatMap((s) => s.provenance.verifications),
       ...bundle.rules.flatMap((r) => r.provenance.verifications),
     ];
@@ -261,7 +262,7 @@ describe('T1–T3 · 关系边必须可追溯（本轮补的缺口）', () => {
 describe('T1–T3 · 当前尚无人工签字（这是刻意的，不是遗漏）', () => {
   it('所有复核记录的 checked_by 都是 ai-candidate', () => {
     const all = [
-      ...bundle.relations.flatMap((r) => r.provenance.verifications),
+      ...relatedByEdges(bundle.relations).flatMap((r) => r.provenance.verifications),
       ...bundle.attribute_spaces.flatMap((s) => s.provenance.verifications),
       ...bundle.rules.flatMap((r) => r.provenance.verifications),
     ];
@@ -278,7 +279,7 @@ describe('T1–T3 · 当前尚无人工签字（这是刻意的，不是遗漏�
       ...bundle.concepts,
       ...bundle.schemas,
       ...bundle.rules,
-      ...bundle.relations,
+      ...relatedByEdges(bundle.relations),
       ...bundle.skills,
       ...bundle.rubrics,
       ...bundle.assessment_specs,
@@ -286,5 +287,67 @@ describe('T1–T3 · 当前尚无人工签字（这是刻意的，不是遗漏�
       ...bundle.exercise_templates,
     ];
     expect(all.filter((e) => e.provenance.review_status === 'reviewed')).toEqual([]);
+  });
+});
+
+// ── 预设易混淆对（confusable_with）与引用完整性 ──────────────────────────────
+
+describe('预设易混淆对 · 教学假设（ADR-0024 候选）', () => {
+  const presets = () => bundle.relations.filter((r) => r.type === 'confusable_with');
+
+  it('已登记 4 对八卦镜像对', () => {
+    expect(presets()).toHaveLength(4);
+  });
+
+  it('两端都是已存在的符号，且不是同一个节点', () => {
+    const symbolIds = new Set(bundle.symbols.map((s) => s.id));
+    for (const p of presets()) {
+      if (p.type !== 'confusable_with') throw new Error('类型不对');
+      expect(symbolIds.has(p.from_node_id), `${p.from_node_id} 不存在`).toBe(true);
+      expect(symbolIds.has(p.to_node_id), `${p.to_node_id} 不存在`).toBe(true);
+      expect(p.from_node_id).not.toBe(p.to_node_id);
+    }
+  });
+
+  it('每条都写了 rationale —— 没有理由的预测没有采集价值', () => {
+    for (const p of presets()) {
+      if (p.type !== 'confusable_with') throw new Error('类型不对');
+      expect(p.rationale.length).toBeGreaterThan(10);
+    }
+  });
+
+  it('镜像对的预测与位编码自洽（震=100 vs 艮=001，巽=011 vs 兑=110，坎=010 vs 离=101）', () => {
+    const tri = bundle.rules.find((r) => r.id === 'rule.liuyao.trigram-by-yao')!;
+    const bitsOf = (name: string) => String(tri.table!.rows.find((r) => r.name === name)!.bits);
+    const reverse = (b: string) => [...b].reverse().join('');
+    // 震/艮、巽/兑 是**互相镜像**（位串反转）
+    expect(reverse(bitsOf('震'))).toBe(bitsOf('艮'));
+    expect(reverse(bitsOf('巽'))).toBe(bitsOf('兑'));
+    // 坎/离 是**逐位相反**（每一爻阴阳相反）
+    const flip = (b: string) => [...b].map((c) => (c === '1' ? '0' : '1')).join('');
+    expect(flip(bitsOf('坎'))).toBe(bitsOf('离'));
+  });
+
+  it('教学假设只能是 draft —— 它的验证方式是实测数据，不是文献', () => {
+    for (const p of presets()) {
+      if (p.type !== 'confusable_with') throw new Error('类型不对');
+      expect(p.provenance.review_status).toBe('draft');
+      expect(p.provenance.sources).toEqual([]);
+    }
+  });
+
+  it('CI：confusable_with 的悬空引用会被抓（R10）—— 这条覆盖是补上的', () => {
+    const b = structuredClone(bundle) as ContentBundle;
+    const idx = b.relations.findIndex((r) => r.type === 'confusable_with');
+    const rel = b.relations[idx]!;
+    if (rel.type !== 'confusable_with') throw new Error('类型不对');
+    rel.to_node_id = 'sym.bagua.不存在';
+    expect(validateBundle(b).errors.map((e) => e.rule)).toContain('R10');
+  });
+
+  it('CI：Skill.confusable_with_skill_ids 的悬空引用也会被抓（此前漏检，内容库里真有一条）', () => {
+    const b = structuredClone(bundle) as ContentBundle;
+    b.skills[0]!.confusable_with_skill_ids = ['skill.不存在'];
+    expect(validateBundle(b).errors.map((e) => e.rule)).toContain('R10');
   });
 });
