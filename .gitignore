@@ -1,0 +1,30 @@
+# 依赖
+node_modules/
+.pnpm-store/
+
+# 构建产物
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# 环境与密钥
+.env
+.env.*
+!.env.example
+
+# 系统
+.DS_Store
+**/.DS_Store
+.icloud
+
+# 编辑器
+.vscode/*
+!.vscode/settings.json
+.idea/
+
+# 日志
+*.log
+npm-debug.log*
+pnpm-debug.log*

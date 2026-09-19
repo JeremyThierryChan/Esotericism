@@ -1,0 +1,19 @@
+{
+  "name": "divination-learning-game",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.24.0",
+  "description": "术数学习游戏 · monorepo 根。docs/ 为项目长期记忆，packages/ 为代码。",
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "validate": "pnpm --filter @dlg/domain validate",
+    "spike": "pnpm --filter @dlg/domain spike"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

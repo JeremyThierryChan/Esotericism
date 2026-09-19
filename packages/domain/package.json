@@ -1,0 +1,28 @@
+{
+  "name": "@dlg/domain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "知识本体层 / 能力层 / 教学层 的类型与 zod schema + CI 校验规则（ADR-0008 step 1）",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate": "tsx src/cli/validate.ts",
+    "spike": "tsx src/cli/spike.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
