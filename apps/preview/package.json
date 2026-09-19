@@ -1,0 +1,22 @@
+{
+  "name": "@dlg/preview",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "试玩预览站（ADR-0008 step 3）。**纯静态** —— 无服务端，可直接部署到 GitHub Pages。",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "vite",
+    "build": "vite build && node scripts/smoke.mjs",
+    "preview": "vite preview",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@dlg/content": "workspace:*",
+    "@dlg/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.6"
+  }
+}

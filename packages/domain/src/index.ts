@@ -44,5 +44,11 @@ export * from './bundle.js';
 export * from './validate/rules.js';
 export * from './validate/forbidden.js';
 
+// ---- Layer 4：用户状态层（Attempt / Evidence / JudgeAudit） ----
+export * from './layer4/user-state.js';
+
+// ---- 规则引擎（数据驱动） ----
+export * from './rules/registry.js';
+
 // ---- 规则引擎 spike（六爻） ----
 export * as liuyao from './liuyao/index.js';

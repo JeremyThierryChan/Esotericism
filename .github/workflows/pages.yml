@@ -1,0 +1,77 @@
+name: Deploy preview to GitHub Pages
+
+# ⚠️ 部署前请读 docs/STEP3-GITHUB-PAGES.md 的合规声明：
+#   本站内容是 draft 未经人工复核；仓库可见性会决定这些内容是否等于"公开上线"。
+#   本 workflow 只会构建并发布 apps/preview 的静态产物，不接触任何密钥。
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'apps/preview/**'
+      - 'packages/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # CI 门：内容不合格就不许部署。这是流水线 ② 的落地，不是可选步骤。
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Test
+        run: pnpm -r test
+
+      - name: Validate content library
+        run: pnpm --filter @dlg/content validate
+
+      - name: Build preview
+        # 项目页 URL 形如 https://<user>.github.io/<repo>/，资源必须走子路径
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: pnpm --filter @dlg/preview build
+
+      - name: Add .nojekyll
+        # 下划线开头的资源会被 Jekyll 吃掉，必须显式关掉
+        run: touch apps/preview/dist/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/preview/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

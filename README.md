@@ -27,6 +27,7 @@
 | `docs/V0.2.1-架构决定清单.md` | V0.2.1 | **step 1 前置决定清单**：复核 §8 四项 + 新增 M12–M18（M1 的 4 处未闭合）+ 修订版 schema 与 CI 规则 | ✅ 已定案（ADR-0009–0015） |
 | `packages/domain/SPIKE-REPORT.md` | step 1 | **step 1 完成报告**：ADR→代码映射、抓到的接口缺陷、未审核数据警示、step 2 输入 | ✅ 完成 |
 | `packages/content/STEP2-REPORT.md` | step 2 | **step 2 完成报告**：Exercise 补入理由与边界、纵向双点切片穿了什么、修掉的死规则 R3、未审核数据清单、step 3 输入 | ✅ 完成 |
+| `docs/STEP3-预览站与GitHub-Pages.md` | step 3 | **预览站与部署**：Pages 能/不能做什么、⚠️ 仓库可见性合规问题、站点内容、部署步骤、Layer 4 与三道闸门 | ⚠️ 待你拍定可见性 |
 | `docs/V0.3-跨体系图谱.md` | V0.3 | 迁移图谱 | 未开始 |
 | `docs/V0.4-课程系统.md` | V0.4 | 课程/单元/关卡编排 | 未开始 |
 | `docs/V0.5-练习系统.md` | V0.5 | 题型与判分 | 未开始 |
@@ -46,7 +47,7 @@ V0.2.1 架构决定清单（step 1 前置）                  ✅ 已定案 · A
 ────── ADR-0008 开发顺序 ──────────────────────────────────────────
 step 1  packages/domain + schema + CI 校验 + spike   ✅ 完成
 step 2  手写一条真实内容穿过 schema（+ 补最小 Exercise）  ✅ 完成
-step 3  试玩预览页 + AI 判分闭环 + 私有部署            ⬜ 下一步
+step 3  试玩预览页 ✅ / AI 判分闭环 ✅ / 私有部署 ⬜        🔶 进行中
 step 4  自己当用户玩两周                              ⬜
 step 5  学习者端 UI                                  ⬜
 step 6  内容规模化                                   ⬜
@@ -83,6 +84,8 @@ V1.0  UI / 前端                                     ⬜
 | ADR-0014 | MVP 的跨体系节点 | 选 **B：塔罗 ↔ 占星**（类型 3 历史影响，`historicity = 重建`，evidence 中–高：Lévi 1856 → Golden Dawn *Book T* 1888）。**取代 V0.1 §13 原定的 A（六爻动爻↔牌组演化）**，A 留待后续。反向练习用 R1 Q1.6 的 **RWS/托特 VIII–XI 次序颠倒**（可查证史实） | 已定 |
 | ADR-0015 | 低影响批量项 | ①S9 取象/命题按新增处理（M3）②塔罗**逆位默认启用**，B2 对比课讲「为何有传统不用逆位」③梅花体用「不自洽」作为 **B2 流派对比第一课的内容**，不隐藏 ④删除 `System.family`（M14）⑤判分绑定校验移到 **Layer 3**（M16）⑥`EvidenceStrength` → **`SourceStrength`**（M17） | 已定 |
 | ADR-0016 | 补最小 `Exercise`（Layer 3） | step 2/3 需要「一道能答的题」，但 `Exercise` 被排在 V0.5（step 5 之后）——与 ADR-0008 step 3 的验收标准（「提交真实答案」）冲突。补一个**最小可玩单元**：`prompt` + 题型（照 V0.1 §10.2 的 8 种）+ 绑 Skill + 绑 `AssessmentSpec` + `answer_key`。**不做** `Path`/`Unit`/`Lesson`（属 V0.4），**不是** V0.5 的题型系统。连带修掉 step 1 的**死规则 R3**（见 ADR 后果） | 已定 |
+| ADR-0018 | 预览站技术选型 | 预览站用 **Vite 纯静态**（`apps/preview`），**不用 Next.js**。ADR-0001 定的是最终产品栈（需 SSR/API/DB），**V1.0 学习者端仍按 ADR-0001 用 Next.js**；预览站无服务端、无路由、无数据库，引入 Next.js 只会带来用不上的服务端假设。边界：预览站不是学习者端 UI，不承担 V0.4/V0.5/V1.0 职责 | 已定 |
+| ADR-0019 | 部署分两级 | **Pages = 内部预览**（内容 + 格式 + 规则判分 + 溯源面板）；**私有部署 = 完整闭环**（AI 判分 + 落库审计）。**Pages 版不能验证 H4** —— 它没有 AI 判分。**待你拍定仓库可见性**（公开仓库 = 事实上的公开上线，与「公开上线则要晚」冲突；推荐私有仓库 + Pages） | ⚠️ 待拍定 |
 | ADR-0017 | CI 规则 R1 拆成三档 | V0.2.1 原文「`sources[]` 为空 → 构建失败」若按字面执行，**`draft` 阶段无法存在**（流水线第一步即死）。拆为：**R1a**（`reviewed` 无来源 → error）/ **R1b**（`ai-candidate` 处于 `reviewed` → error）/ **R1c**（`draft` 无来源 → warning，可存在但不可升级）。语义：**「无来源不入库」约束的是上线，不是起草** | 已定 |
 
 ### ADR-0009–0015 为什么必须先于 step 1 定案
@@ -135,6 +138,8 @@ V1.0  UI / 前端                                     ⬜
 - **ADR-0015 →** `System` **不带 `family`**（七政四余同时引用两个 Formalism，二值字段无法容纳）；`Rubric` 绑定校验发生在 Layer 3；全局字段名 `evidence_strength` 一律改为 `source_strength`。
 - **ADR-0016 →** `TransferEdge.paired_reverse_exercise_id` 与 `Exercise.is_reverse_exercise_of_edge_id` **双向确认**：①没填 → 失败 ②填了但对象不存在 → 失败 ③对象存在但没指回本条边 → 失败。**step 1 的 R3 是死规则**（`Exercise` 不存在 → 填任意字符串都能过），step 2 才修好。
 - **ADR-0017 →** CI 规则 R1 的三种情形必须分档校验；`draft` 允许无来源（否则无法起草），`reviewed` 绝不允许。
+- **ADR-0018 →** `apps/preview` 用 Vite；`BASE_PATH` 环境变量控制 Pages 子路径；`modulePreload: false`（单产物静态页用不到 polyfill）。
+- **ADR-0019 →** AI 判分的 API key **绝不出现在静态站**（静态站放 key = 必然泄露）。Pages 版用「离线骨架」降级，并明确标注 `decided_by = offline-skeleton`；`JudgeAudit.runtime` 区分 `server` / `browser-byok` / `offline-skeleton`，防止污染 H4 评测集。
 
 ## 五、环境与路径（ADR-0005 已执行 · 路径已复查）
 
@@ -172,9 +177,11 @@ V1.0  UI / 前端                                     ⬜
 │   │   ├── src/layer0/         ← provenance（sources / source_strength / review_status）
 │   │   ├── src/layer1/         ← formalism · symbol · system · concept · relation · rule · transfer
 │   │   ├── src/layer2/         ← skill（kind + judging_mode，**不含 Rubric 指针**）
-│   │   ├── src/layer3/         ← rubric · assessment（AssessmentSpec）· **exercise**
+│   │   ├── src/layer3/         ← rubric · assessment（AssessmentSpec）· exercise
+│   │   ├── src/layer4/         ← **attempt · evidence · JudgeAudit**（三道闸门的落库形式）
+│   │   ├── src/rules/          ← **规则引擎（数据驱动：真值表来自内容库，不硬编码理论）**
 │   │   ├── src/derive.ts       ← 派生视图 same_formalism_projection（机制 A）
-│   │   ├── src/judges.ts       ← RuleJudge / RubricJudge / RuleTestSetRunner 接口
+│   │   ├── src/judges.ts       ← ruleJudge · rubricJudge · skeletonRubricJudge · RuleTestSetRunner
 │   │   ├── src/validate/       ← **14 条 CI 规则** + 禁用语检查
 │   │   ├── src/liuyao/         ← 规则引擎 spike（⚠️ 表格为未审核 draft）
 │   │   ├── src/cli/            ← validate · spike 两个 CLI
@@ -184,8 +191,13 @@ V1.0  UI / 前端                                     ⬜
 │       ├── bundle.json         ← **内容唯一事实来源**（⚠️ 全部条目 draft 未复核）
 │       ├── src/load.ts         ← 加载 + schema 校验
 │       ├── src/validate.ts     ← 内容 CI 校验 CLI（含派生视图打印）
-│       └── test/               ← 18 条测试（= 内容的硬门）
-└── apps/                       ← （尚未创建：step 3 的试玩页 / 内容流水线工具）
+│       └── test/               ← 37 条测试（内容 + 判分闭环）
+├── apps/
+│   └── preview/                ← @dlg/preview：**试玩预览站（纯静态，可部署 Pages）**
+│       ├── src/main.ts         ← 页面渲染（全部数据从 bundle.json 读，无硬编码术数内容）
+│       ├── scripts/smoke.mjs   ← 产物冒烟测试（用最小 DOM 替身执行打包结果）
+│       └── vite.config.ts      ← BASE_PATH 控制 Pages 子路径
+└── .github/workflows/pages.yml ← 部署门：typecheck → test → CI 校验 → 构建 → 冒烟 → 发布
 ```
 
 **分层不变式（改代码时不许破）：** Layer 1 不含教学信息 · Layer 2 不含顺序也**不含 Rubric 指针** · Layer 3 可整体替换而不动 Layer 1/2。
@@ -199,6 +211,8 @@ pnpm test                                       # 68 条测试
 pnpm validate                                   # CI 校验（domain 空集合 + content 真实内容库）
 pnpm --filter @dlg/content validate             # 只校验真实内容库（含机制 A 派生视图输出）
 pnpm spike                                      # 规则引擎 spike 报告
+pnpm --filter @dlg/preview dev                  # 预览站开发服务器
+BASE_PATH=/<repo>/ pnpm --filter @dlg/preview build   # 构建 + 冒烟测试（模拟 Pages 子路径）
 ```
 
 > **为什么先建 `packages/domain` 而不是 UI：** UI 是数据模型的派生物；内容的体量不是瓶颈，内容的**格式**才是。第一个要写的 UI 其实是**内容流水线工具**（录入 / 审核 / 试玩预览），它同时是内容产线与技术风险集中点。
@@ -207,7 +221,17 @@ pnpm spike                                      # 规则引擎 spike 报告
 
 > **ADR-0005 已执行**（§五 路径复查）；**ADR-0009–0017 已定案**（§四）；**ADR-0008 step 1、step 2 已完成**。
 
-**阻塞项：无。** 下一步是 step 3（试玩预览页 + AI 判分闭环 + 落库）。**建议第一步先补 Layer 4 的 `Attempt`/`Evidence`** —— 「落库」是 step 3 验收标准里的动词，而落库对象不存在（与 step 2 必须先补 `Exercise` 同理）。
+**step 3 进展：** 试玩预览页 ✅、AI 判分闭环 ✅（含三道闸门审计）、Layer 4 ✅；**私有部署 ⬜**。
+
+**⚠️ 需要你拍定（ADR-0019）：仓库可见性。** GitHub Pages 是纯静态托管，仓库可见性直接决定内容是否构成「公开上线」——而认识论原则 3 规定只有 `reviewed` 可上线，当前内容全是 `draft`。
+
+| 方案 | 内容是否公开 | 代价 |
+|---|---|---|
+| **私有仓库 + Pages**（推荐） | 不被索引，但持链接者可看 | 需 GitHub Pro/Team |
+| 公开仓库 + Pages | **公开且可被引用**（已加 `noindex`，但那不是访问控制） | 免费，但与「公开上线则要晚」直接冲突 |
+| 不部署，本地演示 | 不公开 | 合伙人需到你机器上看 |
+
+**另一项必须说清的限制：Pages 版做不了 AI 判分。** 静态站没有服务端，API key 放网页里 = 任何人查看源码即可拿走。因此 Pages 版用「离线骨架」降级（确定性机械检查 + Rubric 自查清单，标注 `offline-skeleton`），**H4（AI 判分稳定性）只能在私有部署上验证**。详见 `docs/STEP3-预览站与GitHub-Pages.md`。
 
 **待人工复核（都是合规门槛，不是待决策）：**
 
@@ -222,7 +246,7 @@ pnpm spike                                      # 规则引擎 spike 报告
 4. **H3 / H4 未验证** —— H3（同源投影降低学习成本）、H4（AI 能稳定执行 Rubric 判分）都要等 step 3–4。
 5. **`RuleTestSet` 的覆盖面** —— M6 已定其为六爻/占星进产品的前置条件，但由谁写、写到什么覆盖率，V0.9 再定。
 
-> 已定案、不再重新讨论：ADR-0006（流派策略）、ADR-0007（类比准入）、ADR-0009（`Formalism` 判据与清单）、ADR-0010（`AttributeSpace`）、ADR-0011（`transfer_type` 枚举）、ADR-0012（`School` 锚点）、ADR-0013（B0 材料）、ADR-0014（MVP 跨体系节点 = B）、ADR-0015（低影响批量项）、ADR-0016（最小 `Exercise`）、ADR-0017（R1 三档拆分）。
+> 已定案、不再重新讨论：ADR-0006（流派策略）、ADR-0007（类比准入）、ADR-0009（`Formalism` 判据与清单）、ADR-0010（`AttributeSpace`）、ADR-0011（`transfer_type` 枚举）、ADR-0012（`School` 锚点）、ADR-0013（B0 材料）、ADR-0014（MVP 跨体系节点 = B）、ADR-0015（低影响批量项）、ADR-0016（最小 `Exercise`）、ADR-0017（R1 三档拆分）、ADR-0018（预览站技术选型）。
 
 
 ---
@@ -246,7 +270,11 @@ pnpm spike                                      # 规则引擎 spike 报告
 
 ### 接上之后的第一件事
 
-**ADR-0008 step 1、step 2 已完成**（100 测全过，见两份报告）。**下一步是 step 3：试玩预览页 + AI 按 Rubric 判分闭环 + 落库 → 私有部署**，验收标准 = 「提交真实答案 → 六段式反馈且过程可审计（验证 H4）」。
+**step 1、2 已完成；step 3 的预览站与判分闭环已完成，剩私有部署。** 119 测全过。
+
+**下一步二选一：**
+- **A（你已选的方向）**：部署 GitHub Pages 给合伙人看 → 先定仓库可见性（ADR-0019），然后 `gh repo create` + Settings → Pages 选 GitHub Actions
+- **B**：推进私有部署（AI 判分 + 落库）→ 补一个服务端，验证 H4
 
 ```bash
 pnpm validate                                   # CI 校验（真实内容库 + 派生视图）
