@@ -31,6 +31,7 @@ export * from './layer2/skill.js';
 // ---- Layer 3 ----
 export * from './layer3/rubric.js';
 export * from './layer3/assessment.js';
+export * from './layer3/exercise.js';
 
 // ---- 派生视图（机制 A） ----
 export * from './derive.js';

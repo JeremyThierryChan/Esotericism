@@ -19,6 +19,7 @@ import { transferEdgeSchema } from './layer1/transfer.js';
 import { skillEdgeSchema, skillSchema } from './layer2/skill.js';
 import { rubricSchema } from './layer3/rubric.js';
 import { assessmentSpecSchema } from './layer3/assessment.js';
+import { exerciseSchema } from './layer3/exercise.js';
 
 export const contentBundleSchema = z.object({
   version: z.number().int().positive(),
@@ -39,6 +40,7 @@ export const contentBundleSchema = z.object({
   skill_edges: z.array(skillEdgeSchema),
   rubrics: z.array(rubricSchema),
   assessment_specs: z.array(assessmentSpecSchema),
+  exercises: z.array(exerciseSchema),
   /**
    * 待检查的**自然语言内容文本**（课程文案、题目、解释）。
    * 禁用语检查（CI 规则 R9）扫描这里，而不是扫描 schema 字段。
@@ -78,6 +80,7 @@ export function emptyBundle(): ContentBundle {
     skill_edges: [],
     rubrics: [],
     assessment_specs: [],
+    exercises: [],
     content_texts: [],
   };
 }

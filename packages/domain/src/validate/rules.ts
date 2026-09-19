@@ -22,6 +22,7 @@ import {
   type Skill,
 } from '../layer2/skill.js';
 import { specsProvidingRubric, specsProvidingRules } from '../layer3/assessment.js';
+import { KIND_ALLOWED_JUDGING_MODES } from '../layer3/exercise.js';
 import { scanForbiddenPhrases } from './forbidden.js';
 
 export type IssueSeverity = 'error' | 'warning';
@@ -61,6 +62,9 @@ const RULE_BASIS = {
   R9: 'V0.1 §14（禁用语检查）',
   R10: 'V0.1 §14 流水线（② 引用完整性）',
   R11: 'ADR-0010（属性取值必须是 Symbol）',
+  R12: 'ADR-0016（题型 ↔ 判分方式必须一致）；V0.1 §10.2',
+  R13: 'ADR-0016（含规则判分的题必须有答案键）；V0.1 §12',
+  R14: 'V0.1 §8.2（跨体系关卡四段式，缺一不可）',
 } as const;
 
 function hasSources(p: { sources: readonly unknown[] }): boolean {
@@ -127,6 +131,7 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     skill_edges: bundle.skill_edges.length,
     rubrics: bundle.rubrics.length,
     assessment_specs: bundle.assessment_specs.length,
+    exercises: bundle.exercises.length,
     content_texts: bundle.content_texts.length,
   };
 
@@ -195,6 +200,8 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
   }
 
   // ---- R3: 类型 4 必须配对反向练习；类型 3 且 historicity = 重建 同理（ADR-0014） ----
+  // 并且**双向确认**：反练习必须真实存在，且指回这条边（ADR-0016 补 Exercise 后 R3 才真正可执行）
+  const exerciseIds = new Set(bundle.exercises.map((e) => e.id));
   for (const e of bundle.transfer_edges) {
     const needsReverse = e.transfer_type === 4 || (e.transfer_type === 3 && e.historicity === '重建');
     if (needsReverse && e.paired_reverse_exercise_id === undefined) {
@@ -207,6 +214,33 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
           e.transfer_type === 4
             ? '类型 4 功能类比必须配反向练习题（找出类比失效的场景）—— 这是 CI 校验规则，不是建议'
             : '类型 3 且 historicity = 重建 的边必须配反向练习题（指出该指派的可争议处）',
+        basis: RULE_BASIS.R3,
+      });
+      continue;
+    }
+    if (e.paired_reverse_exercise_id === undefined) continue;
+
+    // (a) 引用的练习必须存在
+    if (!exerciseIds.has(e.paired_reverse_exercise_id)) {
+      issues.push({
+        rule: 'R3',
+        severity: 'error',
+        entity_kind: 'transfer_edge',
+        entity_id: e.id,
+        message: `paired_reverse_exercise_id = ${e.paired_reverse_exercise_id} 不是已存在的 Exercise —— 悬空的"反向练习"等于没有反向练习`,
+        basis: RULE_BASIS.R3,
+      });
+      continue;
+    }
+    // (b) 该练习必须指回这条边（双向确认，防止一条练习被复用冒充多条边的反练习）
+    const rev = bundle.exercises.find((x) => x.id === e.paired_reverse_exercise_id);
+    if (rev && rev.is_reverse_exercise_of_edge_id !== e.id) {
+      issues.push({
+        rule: 'R3',
+        severity: 'error',
+        entity_kind: 'transfer_edge',
+        entity_id: e.id,
+        message: `配对的 Exercise ${rev.id} 的 is_reverse_exercise_of_edge_id = ${rev.is_reverse_exercise_of_edge_id ?? '(未填)'}，未指回本边 —— 反向练习必须双向确认`,
         basis: RULE_BASIS.R3,
       });
     }
@@ -418,6 +452,119 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
           basis: RULE_BASIS.R11,
         });
       }
+    }
+  }
+
+  // ---- R12: 题型 ↔ 判分方式必须一致（ADR-0016） ----
+  // 「关系判断」必须由规则引擎判定；「开放式解读」只能由 Rubric 判分。混用即失败。
+  const specById = new Map(bundle.assessment_specs.map((s) => [s.id, s]));
+  for (const ex of bundle.exercises) {
+    if (!specById.has(ex.assessment_spec_id)) {
+      issues.push({
+        rule: 'R12',
+        severity: 'error',
+        entity_kind: 'exercise',
+        entity_id: ex.id,
+        message: `assessment_spec_id = ${ex.assessment_spec_id} 不存在`,
+        basis: RULE_BASIS.R12,
+      });
+      continue;
+    }
+    const allowed = KIND_ALLOWED_JUDGING_MODES[ex.kind];
+    for (const sid of ex.skill_ids) {
+      const sk = bundle.skills.find((s) => s.id === sid);
+      if (!sk) {
+        issues.push({
+          rule: 'R12',
+          severity: 'error',
+          entity_kind: 'exercise',
+          entity_id: ex.id,
+          message: `引用了不存在的 skill（${sid}）`,
+          basis: RULE_BASIS.R12,
+        });
+        continue;
+      }
+      if (!allowed.includes(sk.judging_mode)) {
+        issues.push({
+          rule: 'R12',
+          severity: 'error',
+          entity_kind: 'exercise',
+          entity_id: ex.id,
+          message: `题型「${ex.kind}」不允许 judging_mode = ${sk.judging_mode}（Skill: ${sid}）。允许：${allowed.join(' / ')}`,
+          basis: RULE_BASIS.R12,
+        });
+      }
+    }
+  }
+
+  // ---- R13: 规则/半规则判分题必须有答案键（ADR-0016） ----
+  for (const ex of bundle.exercises) {
+    const skills = ex.skill_ids
+      .map((sid) => bundle.skills.find((s) => s.id === sid))
+      .filter((s): s is Skill => s !== undefined);
+    const hasRulePart = skills.some(
+      (s) => RULE_JUDGING_MODES.includes(s.judging_mode) || HYBRID_JUDGING_MODES.includes(s.judging_mode),
+    );
+    if (hasRulePart && ex.answer_key === undefined) {
+      issues.push({
+        rule: 'R13',
+        severity: 'error',
+        entity_kind: 'exercise',
+        entity_id: ex.id,
+        message: '含规则判分部分的题目没有 answer_key —— 规则引擎无从判分（AI 不得介入有唯一答案处）',
+        basis: RULE_BASIS.R13,
+      });
+    }
+    if (ex.answer_key !== undefined && !ruleIds.has(ex.answer_key.rule_id)) {
+      issues.push({
+        rule: 'R13',
+        severity: 'error',
+        entity_kind: 'exercise',
+        entity_id: ex.id,
+        message: `answer_key.rule_id = ${ex.answer_key.rule_id} 不存在于 rules[]`,
+        basis: RULE_BASIS.R13,
+      });
+    }
+    // 题目所测的每个 Skill 都必须被它所用的规约覆盖
+    const spec = specById.get(ex.assessment_spec_id);
+    if (spec) {
+      for (const sid of ex.skill_ids) {
+        if (!spec.skill_ids.includes(sid)) {
+          issues.push({
+            rule: 'R12',
+            severity: 'error',
+            entity_kind: 'exercise',
+            entity_id: ex.id,
+            message: `测的 Skill ${sid} 不在所用规约 ${spec.id} 的 skill_ids 内`,
+            basis: RULE_BASIS.R12,
+          });
+        }
+      }
+    }
+  }
+
+  // ---- R14: 跨体系四段式第 ④ 段必须真实存在（V0.1 §8.2） ----
+  for (const e of bundle.transfer_edges) {
+    const fp = e.four_part_structure;
+    if (fp && !exerciseIds.has(fp.transfer_exercise_id)) {
+      issues.push({
+        rule: 'R14',
+        severity: 'error',
+        entity_kind: 'transfer_edge',
+        entity_id: e.id,
+        message: `四段式第 ④ 段的 transfer_exercise_id = ${fp.transfer_exercise_id} 不是已存在的 Exercise`,
+        basis: RULE_BASIS.R14,
+      });
+    }
+    if (e.transfer_type === 4 && fp === undefined) {
+      issues.push({
+        rule: 'R14',
+        severity: 'error',
+        entity_kind: 'transfer_edge',
+        entity_id: e.id,
+        message: '类型 4 的边必须写完整的四段式结构（V0.1 §8.2：①你已掌握 ②新体系中 ③关系声明 ④迁移练习+反向练习）',
+        basis: RULE_BASIS.R14,
+      });
     }
   }
 

@@ -26,6 +26,7 @@
 | `docs/V0.2-技能树与压力测试.md` | V0.2 | 塔罗深做 + 六爻压力测试 + **18 项模型修订（M1–M18）**，§8 已全部定案 | ✅ 草案待评审 |
 | `docs/V0.2.1-架构决定清单.md` | V0.2.1 | **step 1 前置决定清单**：复核 §8 四项 + 新增 M12–M18（M1 的 4 处未闭合）+ 修订版 schema 与 CI 规则 | ✅ 已定案（ADR-0009–0015） |
 | `packages/domain/SPIKE-REPORT.md` | step 1 | **step 1 完成报告**：ADR→代码映射、抓到的接口缺陷、未审核数据警示、step 2 输入 | ✅ 完成 |
+| `packages/content/STEP2-REPORT.md` | step 2 | **step 2 完成报告**：Exercise 补入理由与边界、纵向双点切片穿了什么、修掉的死规则 R3、未审核数据清单、step 3 输入 | ✅ 完成 |
 | `docs/V0.3-跨体系图谱.md` | V0.3 | 迁移图谱 | 未开始 |
 | `docs/V0.4-课程系统.md` | V0.4 | 课程/单元/关卡编排 | 未开始 |
 | `docs/V0.5-练习系统.md` | V0.5 | 题型与判分 | 未开始 |
@@ -44,8 +45,8 @@ V0.2  技能树（塔罗深做 + 六爻压力测试）              ✅ 草案 �
 V0.2.1 架构决定清单（step 1 前置）                  ✅ 已定案 · ADR-0009–0015
 ────── ADR-0008 开发顺序 ──────────────────────────────────────────
 step 1  packages/domain + schema + CI 校验 + spike   ✅ 完成
-step 2  手写一条真实内容穿过 schema                   ⬜ 下一步
-step 3  试玩预览页 + AI 判分闭环 + 私有部署            ⬜
+step 2  手写一条真实内容穿过 schema（+ 补最小 Exercise）  ✅ 完成
+step 3  试玩预览页 + AI 判分闭环 + 私有部署            ⬜ 下一步
 step 4  自己当用户玩两周                              ⬜
 step 5  学习者端 UI                                  ⬜
 step 6  内容规模化                                   ⬜
@@ -81,6 +82,8 @@ V1.0  UI / 前端                                     ⬜
 | ADR-0013 | B0 基础层教学材料（M8 + M18） | **采用四体系混合样本**，但收紧准入：①B0 样本**只能取流派无关的符号层操作**（阴阳爻、正逆位、五行生克的**方向**、干支顺序、元素分组依据）②涉及取象/取用神/取体用者，**只允许以「同一操作在不同体系取法不同、且存在争议」的形式呈现**③每个样本必须带 `sources[]`，涉流派分歧者带 `school_id`/`controversy_flag`；缺来源不得进入 B0 | 已定 |
 | ADR-0014 | MVP 的跨体系节点 | 选 **B：塔罗 ↔ 占星**（类型 3 历史影响，`historicity = 重建`，evidence 中–高：Lévi 1856 → Golden Dawn *Book T* 1888）。**取代 V0.1 §13 原定的 A（六爻动爻↔牌组演化）**，A 留待后续。反向练习用 R1 Q1.6 的 **RWS/托特 VIII–XI 次序颠倒**（可查证史实） | 已定 |
 | ADR-0015 | 低影响批量项 | ①S9 取象/命题按新增处理（M3）②塔罗**逆位默认启用**，B2 对比课讲「为何有传统不用逆位」③梅花体用「不自洽」作为 **B2 流派对比第一课的内容**，不隐藏 ④删除 `System.family`（M14）⑤判分绑定校验移到 **Layer 3**（M16）⑥`EvidenceStrength` → **`SourceStrength`**（M17） | 已定 |
+| ADR-0016 | 补最小 `Exercise`（Layer 3） | step 2/3 需要「一道能答的题」，但 `Exercise` 被排在 V0.5（step 5 之后）——与 ADR-0008 step 3 的验收标准（「提交真实答案」）冲突。补一个**最小可玩单元**：`prompt` + 题型（照 V0.1 §10.2 的 8 种）+ 绑 Skill + 绑 `AssessmentSpec` + `answer_key`。**不做** `Path`/`Unit`/`Lesson`（属 V0.4），**不是** V0.5 的题型系统。连带修掉 step 1 的**死规则 R3**（见 ADR 后果） | 已定 |
+| ADR-0017 | CI 规则 R1 拆成三档 | V0.2.1 原文「`sources[]` 为空 → 构建失败」若按字面执行，**`draft` 阶段无法存在**（流水线第一步即死）。拆为：**R1a**（`reviewed` 无来源 → error）/ **R1b**（`ai-candidate` 处于 `reviewed` → error）/ **R1c**（`draft` 无来源 → warning，可存在但不可升级）。语义：**「无来源不入库」约束的是上线，不是起草** | 已定 |
 
 ### ADR-0009–0015 为什么必须先于 step 1 定案
 
@@ -94,8 +97,8 @@ V1.0  UI / 前端                                     ⬜
 |---|---|---|---|
 | 0 | V0.2 塔罗技能树 + 六爻压力测试（纯文档） | 模型能容纳第二门体系 | ✅ |
 | 1 | `packages/domain`：类型 + zod schema + CI 校验规则 | 缺来源 / 缺迁移类型的内容构建失败 | ✅ **完成**（`packages/domain/SPIKE-REPORT.md`） |
-| 2 | 手写**一条真实内容**穿过 schema | 内容通过校验并入库 | ⬜ 下一步 |
-| 3 | 试玩预览页 + AI 按 Rubric 判分闭环 + 落库 → 私有部署 | 提交真实答案 → 六段式反馈且过程可审计（验证 H4） | ⬜ |
+| 2 | 手写**一条真实内容**穿过 schema | 内容通过校验并入库 | ✅ **完成**（`packages/content/STEP2-REPORT.md`） |
+| 3 | 试玩预览页 + AI 按 Rubric 判分闭环 + 落库 → 私有部署 | 提交真实答案 → 六段式反馈且过程可审计（验证 H4） | ⬜ 下一步 |
 | 4 | 自己当用户玩两周（30–50 题切片） | 拿到 Mastery 向量与混淆对数据 | ⬜ |
 | 5 | 此时才设计学习者端 UI | 需求第一次变成真的 | ⬜ |
 | 6 | 内容规模化 | 格式已锁定 | ⬜ |
@@ -106,6 +109,15 @@ V1.0  UI / 前端                                     ⬜
 - **9 条 CI 规则全部有对应测试且都能被触发** —— 否则规则只是注释
 - **spike 首次运行即抓到一个接口缺陷**：`palace_element` 字段名与内容不符（装的是八宫表整行，不是五行）。这是**表驱动规则独有的失败形态**，若只按原计划做 L2.1 就发现不了，之后修正 = 重写全部世应相关条目。V0.2 §6 那句「一天的成本，避免塔罗做完才发现规则引擎接口设计不下去」由此得到实证
 - ⚠️ `src/liuyao/tables.ts` 的八宫卦序表是 **AI 起草的 draft 候选，未经人工复核**，不得进入 `reviewed`，不得用于教学或判分
+
+**step 2 的实测结果：**
+
+- `packages/content/bundle.json` = 真实内容库（**全部条目 `draft`**），`pnpm validate` 通过
+- **100 条测试全过**（domain 82 + content 18）
+- 修掉 step 1 的**死规则 R3**：`Exercise` 不存在时，「配对的配对反向练习」只能检查「有没有填」，填任意字符串都能过
+- **机制 A 是算出来的，不是建的**：五行符号被六爻与梅花共用 → `sameFormalismProjection()` 派生 2 条投影，全程**没有任何人工边**
+- **八字被刻意排除**：R1 完全未涉及八字的文献，而 ADR-0012 要求每个体系的 `default_school` 必须绑可引证文献 → 不给它编来源。六爻 + 梅花已足够触发机制 A
+- ⚠️ 内容条目**当前不可能升级为 `reviewed`** —— 唯一来源 R1 自己就是 `draft`。要升级必须先人工核一手文献（清单见 `STEP2-REPORT.md` §五）
 
 
 **注意：** 第一个要写的 UI 不是学习者端，而是**内容流水线工具**（录入 / 审核 / 试玩预览）。它同时是内容产线与技术风险集中点。**早期部署到私有 URL，公开上线则要晚。**
@@ -121,6 +133,8 @@ V1.0  UI / 前端                                     ⬜
 - **ADR-0012 →** `School.anchor_sources[]` 非空是入门 `default_school` 的**上线前提**（CI 校验）。
 - **ADR-0014 →** V0.1 §13 的 MVP 定义**已改写**（A→B）；跨体系关卡四段式中第 ④ 段的「反向练习」内容随之改为「指出 Golden Dawn 行星/星座指派的可争议处」——素材用 R1 Q1.6 的 RWS/托特 VIII–XI 次序颠倒。
 - **ADR-0015 →** `System` **不带 `family`**（七政四余同时引用两个 Formalism，二值字段无法容纳）；`Rubric` 绑定校验发生在 Layer 3；全局字段名 `evidence_strength` 一律改为 `source_strength`。
+- **ADR-0016 →** `TransferEdge.paired_reverse_exercise_id` 与 `Exercise.is_reverse_exercise_of_edge_id` **双向确认**：①没填 → 失败 ②填了但对象不存在 → 失败 ③对象存在但没指回本条边 → 失败。**step 1 的 R3 是死规则**（`Exercise` 不存在 → 填任意字符串都能过），step 2 才修好。
+- **ADR-0017 →** CI 规则 R1 的三种情形必须分档校验；`draft` 允许无来源（否则无法起草），`reviewed` 绝不允许。
 
 ## 五、环境与路径（ADR-0005 已执行 · 路径已复查）
 
@@ -153,20 +167,28 @@ V1.0  UI / 前端                                     ⬜
 ├── pnpm-workspace.yaml         ← workspace 定义 + allowBuilds（pnpm 10+ 已迁至此）
 ├── tsconfig.base.json
 ├── packages/
-│   └── domain/                 ← @dlg/domain：知识架构的类型与 schema
-│       ├── SPIKE-REPORT.md     ← step 1 完成报告（先看这个）
-│       ├── src/layer0/         ← provenance（sources / source_strength / review_status）
-│       ├── src/layer1/         ← formalism · symbol · system · concept · relation · rule · transfer
-│       ├── src/layer2/         ← skill（kind + judging_mode，**不含 Rubric 指针**）
-│       ├── src/layer3/         ← rubric · assessment（AssessmentSpec）
-│       ├── src/derive.ts       ← 派生视图 same_formalism_projection（机制 A）
-│       ├── src/judges.ts       ← RuleJudge / RubricJudge / RuleTestSetRunner 接口
-│       ├── src/validate/       ← 9 条 CI 规则 + 禁用语检查
-│       ├── src/liuyao/         ← 规则引擎 spike（⚠️ 表格为未审核 draft）
-│       ├── src/cli/            ← validate · spike 两个 CLI
-│       └── test/               ← 68 条测试
+│   ├── domain/                 ← @dlg/domain：知识架构的类型与 schema
+│   │   ├── SPIKE-REPORT.md     ← step 1 完成报告
+│   │   ├── src/layer0/         ← provenance（sources / source_strength / review_status）
+│   │   ├── src/layer1/         ← formalism · symbol · system · concept · relation · rule · transfer
+│   │   ├── src/layer2/         ← skill（kind + judging_mode，**不含 Rubric 指针**）
+│   │   ├── src/layer3/         ← rubric · assessment（AssessmentSpec）· **exercise**
+│   │   ├── src/derive.ts       ← 派生视图 same_formalism_projection（机制 A）
+│   │   ├── src/judges.ts       ← RuleJudge / RubricJudge / RuleTestSetRunner 接口
+│   │   ├── src/validate/       ← **14 条 CI 规则** + 禁用语检查
+│   │   ├── src/liuyao/         ← 规则引擎 spike（⚠️ 表格为未审核 draft）
+│   │   ├── src/cli/            ← validate · spike 两个 CLI
+│   │   └── test/               ← 82 条测试
+│   └── content/                ← @dlg/content：真实内容库（step 2）
+│       ├── STEP2-REPORT.md     ← step 2 完成报告
+│       ├── bundle.json         ← **内容唯一事实来源**（⚠️ 全部条目 draft 未复核）
+│       ├── src/load.ts         ← 加载 + schema 校验
+│       ├── src/validate.ts     ← 内容 CI 校验 CLI（含派生视图打印）
+│       └── test/               ← 18 条测试（= 内容的硬门）
 └── apps/                       ← （尚未创建：step 3 的试玩页 / 内容流水线工具）
 ```
+
+**分层不变式（改代码时不许破）：** Layer 1 不含教学信息 · Layer 2 不含顺序也**不含 Rubric 指针** · Layer 3 可整体替换而不动 Layer 1/2。
 
 **命令：**
 
@@ -174,8 +196,8 @@ V1.0  UI / 前端                                     ⬜
 pnpm install
 pnpm typecheck                                  # tsc --noEmit
 pnpm test                                       # 68 条测试
-pnpm validate                                   # CI 校验（空集合）
-pnpm --filter @dlg/domain validate <bundle>      # CI 校验（真实内容 → step 2）
+pnpm validate                                   # CI 校验（domain 空集合 + content 真实内容库）
+pnpm --filter @dlg/content validate             # 只校验真实内容库（含机制 A 派生视图输出）
 pnpm spike                                      # 规则引擎 spike 报告
 ```
 
@@ -183,19 +205,24 @@ pnpm spike                                      # 规则引擎 spike 报告
 
 ## 六、当前未决问题
 
-> **ADR-0005 已执行**（§五 路径复查）；**ADR-0009–0015 已定案**（§四）；**ADR-0008 step 1 已完成**。
+> **ADR-0005 已执行**（§五 路径复查）；**ADR-0009–0017 已定案**（§四）；**ADR-0008 step 1、step 2 已完成**。
 
-**阻塞项：无。** 下一步是 step 2（手写一条真实内容穿过 schema）。
+**阻塞项：无。** 下一步是 step 3（试玩预览页 + AI 判分闭环 + 落库）。**建议第一步先补 Layer 4 的 `Attempt`/`Evidence`** —— 「落库」是 step 3 验收标准里的动词，而落库对象不存在（与 step 2 必须先补 `Exercise` 同理）。
 
-**待确认 / 待复核：**
+**待人工复核（都是合规门槛，不是待决策）：**
 
-1. **CI 规则 R1 的拆法**（step 1 实现时的一处细化）—— V0.2.1 §4 写的是「`sources[]` 为空 → 构建失败」，但按字面执行会导致 `draft` 阶段无法存在（流水线第一步即死）。实现拆成 R1a（reviewed 无来源 → error）/ R1b（ai-candidate 处于 reviewed → error）/ R1c（draft 无来源 → warning）。**详见 `packages/domain/SPIKE-REPORT.md` §5，需你确认。**
-2. **八宫卦序表需人工复核** —— `packages/domain/src/liuyao/tables.ts` 是 AI 起草的 `draft` 候选（3 项待核事项见 `SPIKE-REPORT.md` §6）。**未经复核不得进入 reviewed，不得用于教学或判分。**
-3. **R1 证据清单需人工复核** —— 状态 `draft`，**升 `reviewed` 前不得作为事实写入内容库**。R1 自身声明：多数原文未逐字核对，标「中／低」置信度者需在原典或纸本书复核。
-4. **H3 / H4 未验证** —— H3（同源投影降低学习成本）、H4（AI 能稳定执行 Rubric 判分）都要等 step 3–4 才有数据。
+| # | 事项 | 位置 |
+|---|---|---|
+| 1 | **八宫卦序表**（AI 起草 draft，3 项待核） | `packages/domain/src/liuyao/tables.ts` |
+| 2 | **内容库全部条目的来源** | `packages/content/bundle.json` —— 唯一来源 R1 自己就是 `draft`，故**当前不可能升级为 `reviewed`**；要升级须人工核一手文献（清单见 `STEP2-REPORT.md` §五） |
+| 3 | **R1 证据清单** | 状态 `draft`，升 `reviewed` 前不得作为事实写入内容库 |
+
+**待观察（需数据）：**
+
+4. **H3 / H4 未验证** —— H3（同源投影降低学习成本）、H4（AI 能稳定执行 Rubric 判分）都要等 step 3–4。
 5. **`RuleTestSet` 的覆盖面** —— M6 已定其为六爻/占星进产品的前置条件，但由谁写、写到什么覆盖率，V0.9 再定。
 
-> 已定案、不再重新讨论：ADR-0006（流派策略）、ADR-0007（类比准入）、ADR-0009（`Formalism` 判据与清单）、ADR-0010（`AttributeSpace`）、ADR-0011（`transfer_type` 枚举）、ADR-0012（`School` 锚点）、ADR-0013（B0 材料）、ADR-0014（MVP 跨体系节点 = B）、ADR-0015（低影响批量项）。
+> 已定案、不再重新讨论：ADR-0006（流派策略）、ADR-0007（类比准入）、ADR-0009（`Formalism` 判据与清单）、ADR-0010（`AttributeSpace`）、ADR-0011（`transfer_type` 枚举）、ADR-0012（`School` 锚点）、ADR-0013（B0 材料）、ADR-0014（MVP 跨体系节点 = B）、ADR-0015（低影响批量项）、ADR-0016（最小 `Exercise`）、ADR-0017（R1 三档拆分）。
 
 
 ---
@@ -214,25 +241,24 @@ pnpm spike                                      # 规则引擎 spike 报告
 | 4 | `docs/V0.2-技能树与压力测试.md` | 塔罗/六爻技能树、**18 项模型修订（M1–M18）**、§8（已定案） |
 | 5 | `docs/V0.2.1-架构决定清单.md` | M1 的 4 处未闭合（M12–M15）+ M16–M18、**已定案**的 ADR-0009–0015、修订版 schema、CI 规则 |
 | 6 | `docs/research/R1-跨体系对应事实核查.md` | 跨体系对应的证据与置信度（**`draft`**，含 10 项「无法核实」清单） |
-| 7 | `packages/domain/SPIKE-REPORT.md` | **step 1 完成报告**：ADR→代码映射、spike 抓到的接口缺陷、未审核数据警示、step 2 输入 |
+| 7 | `packages/domain/SPIKE-REPORT.md` | **step 1 完成报告**：ADR→代码映射、spike 抓到的接口缺陷、未审核数据警示 |
+| 8 | `packages/content/STEP2-REPORT.md` | **step 2 完成报告**：Exercise 补入理由、纵向双点切片、修掉的死规则 R3、未审核清单、step 3 输入 |
 
 ### 接上之后的第一件事
 
-**ADR-0008 step 1 已完成**（`packages/domain`，68 测全过，见 `SPIKE-REPORT.md`）。**下一步是 step 2：手写一条真实内容穿过 schema。**
-
-step 2 的入口路径已打通：
+**ADR-0008 step 1、step 2 已完成**（100 测全过，见两份报告）。**下一步是 step 3：试玩预览页 + AI 按 Rubric 判分闭环 + 落库 → 私有部署**，验收标准 = 「提交真实答案 → 六段式反馈且过程可审计（验证 H4）」。
 
 ```bash
-pnpm --filter @dlg/domain validate <bundle.json>   # 通过即入库；失败会指出触发了哪条规则、依据是什么
+pnpm validate                                   # CI 校验（真实内容库 + 派生视图）
+pnpm test                                       # 100 条
+pnpm spike                                      # 规则引擎 spike
 ```
 
-**step 2 第一条内容的建议：B0 的一个 A 类样本**（ADR-0013：流派无关的符号层操作，如阴阳爻、五行生克的方向）。理由三条：
+**step 3 的第一步建议不是画页面，而是补 Layer 4 的 `Attempt`/`Evidence`。** 理由与 step 2 必须先补 `Exercise` 完全相同：**「落库」是 step 3 验收标准里的动词，而落库对象不存在。** 先把审计链（V0.1 §12 三道闸门）打通，页面才有东西可显示。规模比 `Exercise` 还小。
 
-1. 它是阶段 0 的入口、跨体系共享 —— **写一次，四个体系复用**，能验证「共享单元」这个设计是否真的成立
-2. 它不含任何流派分歧 → 不会被 M11（`anchor_sources`）与 M18（A/B 类样本）的审核门槛卡住
-3. 它最小 —— step 2 的目的是验证**格式**，不是产出内容量
+step 3 的其余缺口：`apps/web`（ADR-0001：Next.js）+ 私有部署 + AI 调用配置。
 
-**注意：** 若在 step 2 过程中发现 schema 需要改，**先改 ADR 再改 schema**。`symbol_id`（共享还是新建）、五行是属性还是符号、`transfer_type` 取值域这三处变动 = 重写全部内容条目（这正是 step 1 必须先做完的原因）。
+**注意：** 若发现 schema 需要改，**先改 ADR 再改 schema**。`symbol_id`（共享还是新建）、五行是属性还是符号、`transfer_type` 取值域这三处变动 = 重写全部内容条目（这正是 step 1 必须先做完的原因）。
 
 ### 注意事项
 
@@ -240,5 +266,6 @@ pnpm --filter @dlg/domain validate <bundle.json>   # 通过即入库；失败会
 - **不要重新生成术数理论**：凡涉及具体对应关系，引用 R1 或新增带来源的核查，并走同一条 `draft → reviewed` 流水线。`packages/domain/src/liuyao/tables.ts` 就是这条规则的活样本 —— 它是 AI 起草的 `draft`，代码里显式标注了未复核，测试断言它永远不是 `reviewed`。
 - **R1 的方法学限制**：环境无直连网络，多数原文未逐字核对，标注为「中／低」置信度的条目需在原典或纸本书复核。
 - **改动 schema 门槛已抬高**：见上。
-- **代码与文档同仓**：`docs/` 是长期记忆，`packages/domain` 是决策的可执行形式。改动 schema 时**两处都要改**，否则文档与代码会互相说谎 —— 而 step 1 里 `palace_element` 那个缺陷正是「类型标注说谎」造成的。
+- **代码与文档同仓**：`docs/` 是长期记忆，`packages/domain` 是决策的可执行形式，`packages/content` 是内容的唯一事实来源。改动 schema 时**两处都要改**，否则文档与代码会互相说谎 —— 而 step 1 里 `palace_element` 那个缺陷正是「类型标注说谎」造成的。
+- **内容库的全部条目都是 `draft`，未经人工复核，不得上线。** 有一条测试专门锁住这一点：谁把某条改成 `reviewed` 而不核一手文献，测试就失败。
 

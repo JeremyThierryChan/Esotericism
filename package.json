@@ -7,7 +7,7 @@
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "validate": "pnpm --filter @dlg/domain validate",
+    "validate": "pnpm -r validate",
     "spike": "pnpm --filter @dlg/domain spike"
   },
   "devDependencies": {

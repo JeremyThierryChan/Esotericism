@@ -1,0 +1,21 @@
+{
+  "name": "@dlg/content",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "内容库：真实内容条目（ADR-0008 step 2）。bundle.json 是唯一事实来源，测试即 CI 校验。",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "validate": "tsx src/validate.ts"
+  },
+  "dependencies": {
+    "@dlg/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

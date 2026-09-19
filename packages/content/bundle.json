@@ -1,0 +1,412 @@
+{
+  "version": 2,
+  "formalism": [
+    {
+      "id": "east-xiangshu",
+      "name": "东方象数形式系统",
+      "description": "阴阳 · 五行 · 天干地支 · 八卦。符号集是同一套，且符号间规则可互相定义（干支有五行、八卦纳甲配干支）—— 这是 ADR-0009 的判据，不是「文化圈」",
+      "symbol_scope": ["阴阳", "五行", "天干地支", "八卦"],
+      "provenance": {
+        "sources": [{ "ref": "R1 Q3.1（纳甲溯源至汉代京房；《火珠林》定型以钱代蓍的六爻）", "confidence": "中–高" }],
+        "source_strength": "中",
+        "controversy_flag": true,
+        "controversy_note": "《火珠林》作者托名麻衣道者，属争议（R1 Q3.1）",
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "greek-four-elements",
+      "name": "希腊四元素形式系统",
+      "description": "火 · 气 · 水 · 土。塔罗与占星共同引用它 → 机制 A 共享（ADR-0009）",
+      "symbol_scope": ["火", "气", "水", "土"],
+      "provenance": {
+        "sources": [{ "ref": "R1 Q2.2（Empedocles 四元素＋爱憎聚散；亚里士多德式转化只发生在相邻性质之间）", "confidence": "中–高" }],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "planetary-zodiac",
+      "name": "行星黄道形式系统",
+      "description": "行星 · 星座 · 宫位。占星的原生形式系统",
+      "symbol_scope": ["行星", "星座", "宫位"],
+      "provenance": {
+        "sources": [{ "ref": "R1 Q1（塔罗–占星对应的文献链：Lévi 1856 → Golden Dawn Book T 1888）", "confidence": "中–高" }],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "tarot-symbolic",
+      "name": "塔罗象征系统",
+      "description": "22 大牌序列 · 四花色 · 牌义。塔罗的原生符号归此。行星/星座经 transfers_as 边（类型 3，historicity = 重建）引入，**不是**共享符号",
+      "symbol_scope": ["大阿卡纳", "四花色", "牌义"],
+      "provenance": {
+        "sources": [
+          { "ref": "R1 Q1.1（1783–1785 Etteilla 制作最早的占卜用塔罗）", "confidence": "高" },
+          { "ref": "R1 Q1.5（Dummett & Decker：秘教/占星含义是 18–20 世纪重构，非塔罗原生）", "confidence": "高" }
+        ],
+        "source_strength": "中",
+        "controversy_flag": true,
+        "controversy_note": "「这是塔罗原生理论还是 19–20 世纪重构」——Dummett & Decker 学派主张重构说，R1 标为「存在分歧但主流倾向重构说」",
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    }
+  ],
+
+  "attribute_spaces": [
+    {
+      "id": "space.wuxing",
+      "formalism_id": "east-xiangshu",
+      "name": "五行",
+      "value_symbol_ids": ["sym.wuxing.木", "sym.wuxing.火", "sym.wuxing.土", "sym.wuxing.金", "sym.wuxing.水"],
+      "provenance": {
+        "sources": [
+          { "ref": "R1 Q2.2（五行有相生、相克两条闭循环；强调功能关系而非质料构成）", "confidence": "中–高" },
+          { "ref": "清華大學「五行」講義 PDF（R1 Q2.2 所引）", "url": "http://mx.nthu.edu.tw/~chmau/doc/add_25.pdf", "confidence": "中" }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    }
+  ],
+
+  "symbols": [
+    { "id": "sym.wuxing.木", "formalism_id": "east-xiangshu", "canonical_name": "木", "aliases": [], "symbol_kind": "attribute_value", "attribute_space_id": "space.wuxing",
+      "provenance": { "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "sym.wuxing.火", "formalism_id": "east-xiangshu", "canonical_name": "火", "aliases": [], "symbol_kind": "attribute_value", "attribute_space_id": "space.wuxing",
+      "provenance": { "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "sym.wuxing.土", "formalism_id": "east-xiangshu", "canonical_name": "土", "aliases": [], "symbol_kind": "attribute_value", "attribute_space_id": "space.wuxing",
+      "provenance": { "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "sym.wuxing.金", "formalism_id": "east-xiangshu", "canonical_name": "金", "aliases": [], "symbol_kind": "attribute_value", "attribute_space_id": "space.wuxing",
+      "provenance": { "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "sym.wuxing.水", "formalism_id": "east-xiangshu", "canonical_name": "水", "aliases": [], "symbol_kind": "attribute_value", "attribute_space_id": "space.wuxing",
+      "provenance": { "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+
+    { "id": "sym.tarot.strength", "formalism_id": "tarot-symbolic", "canonical_name": "力量", "aliases": ["Strength", "VIII/XI"], "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          { "ref": "R1 Q1.6（Waite 把力量（狮子座）置 VIII、正义（天秤座）置 XI，与 Golden Dawn 原序相反）", "confidence": "中" }
+        ],
+        "source_strength": "中", "controversy_flag": true,
+        "controversy_note": "次序本身存在分歧：RWS 置 VIII，Golden Dawn 原序 VIII = 正义；托特沿用原序",
+        "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "sym.zodiac.leo", "formalism_id": "planetary-zodiac", "canonical_name": "狮子座", "aliases": ["Leo"], "symbol_kind": "native",
+      "provenance": {
+        "sources": [{ "ref": "R1 Q1.6（力量＝狮子座为 Golden Dawn 归赋）", "confidence": "中" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } }
+  ],
+
+  "has_attributes": [],
+
+  "symbol_usages": [
+    { "symbol_id": "sym.wuxing.木", "system_id": "system.liuyao", "role": "六亲取用（以卦宫五行为参照定六亲）" },
+    { "symbol_id": "sym.wuxing.木", "system_id": "system.meihua", "role": "体用生克（判体用强弱）" },
+    { "symbol_id": "sym.wuxing.火", "system_id": "system.liuyao", "role": "六亲取用（以卦宫五行为参照定六亲）" },
+    { "symbol_id": "sym.wuxing.火", "system_id": "system.meihua", "role": "体用生克（判体用强弱）" }
+  ],
+
+  "systems": [
+    {
+      "id": "system.liuyao", "name": "六爻", "era": "汉代京房纳甲溯源；明清定型",
+      "default_school_id": "school.liuyao.zengshanbu",
+      "formalism_ids": ["east-xiangshu"],
+      "provenance": { "sources": [{ "ref": "R1 Q3.1、Q3.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": true,
+        "controversy_note": "用神取法、世应、月建日辰权重、动爻变爻处理均为实务内部长期争论（R1 Q3.4，未找到同行评议研究系统归纳）",
+        "review_status": "draft", "authored_by": "human", "version": 1 }
+    },
+    {
+      "id": "system.meihua", "name": "梅花易数", "era": "传北宋邵雍，多认为后人托名",
+      "default_school_id": "school.meihua.tongxingben",
+      "formalism_ids": ["east-xiangshu"],
+      "provenance": { "sources": [{ "ref": "R1 Q4.1、Q4.2", "confidence": "中" }], "source_strength": "中", "controversy_flag": true,
+        "controversy_note": "作者归属争议（多认为托名邵雍）；体用取法本身不自洽（林俊岑文）—— 按 ADR-0015③，这将成为 B2 流派对比第一课的内容，而不是被隐藏",
+        "review_status": "draft", "authored_by": "human", "version": 1 }
+    }
+  ],
+
+  "schools": [
+    {
+      "id": "school.liuyao.zengshanbu",
+      "system_id": "system.liuyao",
+      "name": "《增删卜易》一路取法",
+      "stance": "以用神为核心，重月建日辰与旺衰；本课程入门阶段锁定此一路，界面不展示其他流派（ADR-0006）",
+      "anchor_sources": [
+        { "ref": "《增删卜易》", "author": "清·野鹤老人（李文辉编校刊行）", "confidence": "中–高", "note": "R1 Q3.2 核实了书名与作者归属；**成书年份未核实，故不填 year**（ADR-0012）" }
+      ],
+      "is_default_of_system": true,
+      "provenance": { "sources": [{ "ref": "R1 Q3.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 }
+    },
+    {
+      "id": "school.meihua.tongxingben",
+      "system_id": "system.meihua",
+      "name": "《梅花易数》通行本一路取法",
+      "stance": "以通行本所载取法为准；因该本取法本身不自洽，入门只教其中一种并在 B2 显式呈现分歧",
+      "anchor_sources": [
+        { "ref": "《梅花易数》", "author": "传北宋邵雍撰（多认为后人托名）", "confidence": "中", "note": "作者归属有争议；具体成书年代与编者来源互相矛盾（R1 清单第 3 条）—— 故不填 year" }
+      ],
+      "is_default_of_system": true,
+      "provenance": { "sources": [{ "ref": "R1 Q4.1", "confidence": "中" }], "source_strength": "中", "controversy_flag": true,
+        "controversy_note": "托名倾向明确，但「何代何人编成」无定论", "review_status": "draft", "authored_by": "human", "version": 1 }
+    }
+  ],
+
+  "concepts": [
+    {
+      "id": "concept.wuxing.shengke",
+      "name": "生克（有向作用）",
+      "definition": "五行之间两种有方向的闭循环作用关系：相生（木→火→土→金→水→木）与相克（木→土→水→火→金→木）。它是**功能关系**，不是质料构成关系——这正是它与希腊四元素不可作理论等价的理由之一（V0.1 §5.4）",
+      "schema_id": "S4",
+      "provenance": { "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 }
+    }
+  ],
+
+  "schemas": [
+    { "id": "S4", "name": "作用联结", "operation": "判断两个符号之间的有向作用（生/克/相位/顺序）", "covers": ["关系（有向）"],
+      "provenance": { "sources": [{ "ref": "V0.1 §4（Schema 表）", "confidence": "中" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "S8", "name": "叙事", "operation": "把判断组织成他人可理解的说明，并区分「所示」与「推测」", "covers": ["叙事"],
+      "provenance": { "sources": [{ "ref": "V0.1 §4（Schema 表）", "confidence": "中" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } },
+    { "id": "S9", "name": "取象 / 命题", "operation": "把现实问题映射为可判断的符号对象，并说明映射依据", "covers": ["象（入口方向）"],
+      "teaching_note": "教学中应提前（它是入口技能，不是高阶技能）；在 B2 流派对比课程里会再次出现",
+      "provenance": { "sources": [{ "ref": "V0.2 §5.4；ADR-0015①", "confidence": "中" }], "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1 } }
+  ],
+
+  "relations": [
+    { "type": "related_by", "subtype": "生", "from_symbol_id": "sym.wuxing.木", "to_symbol_id": "sym.wuxing.火", "direction": "forward" },
+    { "type": "related_by", "subtype": "生", "from_symbol_id": "sym.wuxing.火", "to_symbol_id": "sym.wuxing.土", "direction": "forward" },
+    { "type": "related_by", "subtype": "生", "from_symbol_id": "sym.wuxing.土", "to_symbol_id": "sym.wuxing.金", "direction": "forward" },
+    { "type": "related_by", "subtype": "生", "from_symbol_id": "sym.wuxing.金", "to_symbol_id": "sym.wuxing.水", "direction": "forward" },
+    { "type": "related_by", "subtype": "生", "from_symbol_id": "sym.wuxing.水", "to_symbol_id": "sym.wuxing.木", "direction": "forward" },
+    { "type": "related_by", "subtype": "克", "from_symbol_id": "sym.wuxing.木", "to_symbol_id": "sym.wuxing.土", "direction": "forward" },
+    { "type": "related_by", "subtype": "克", "from_symbol_id": "sym.wuxing.土", "to_symbol_id": "sym.wuxing.水", "direction": "forward" },
+    { "type": "related_by", "subtype": "克", "from_symbol_id": "sym.wuxing.水", "to_symbol_id": "sym.wuxing.火", "direction": "forward" },
+    { "type": "related_by", "subtype": "克", "from_symbol_id": "sym.wuxing.火", "to_symbol_id": "sym.wuxing.金", "direction": "forward" },
+    { "type": "related_by", "subtype": "克", "from_symbol_id": "sym.wuxing.金", "to_symbol_id": "sym.wuxing.木", "direction": "forward" }
+  ],
+
+  "rules": [
+    {
+      "id": "rule.wuxing.shengke",
+      "system_id": "system.liuyao",
+      "school_id": "school.liuyao.zengshanbu",
+      "name": "五行生克关系与方向判定",
+      "procedure_ref": "wuxing/shengke#resolveRelation",
+      "test_set_id": "ruleset.wuxing.shengke",
+      "applies_to_symbol_ids": ["sym.wuxing.木", "sym.wuxing.火", "sym.wuxing.土", "sym.wuxing.金", "sym.wuxing.水"],
+      "provenance": {
+        "sources": [{ "ref": "R1 Q2.2（相生/相克两条闭循环）", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    }
+  ],
+
+  "rule_test_sets": [
+    {
+      "rule_id": "rule.wuxing.shengke",
+      "cases": [
+        { "input": { "a": "木", "b": "火" }, "expected": { "relation": "生", "direction": "a→b" } },
+        { "input": { "a": "火", "b": "木" }, "expected": { "relation": "生", "direction": "b→a" } },
+        { "input": { "a": "木", "b": "土" }, "expected": { "relation": "克", "direction": "a→b" } },
+        { "input": { "a": "金", "b": "木" }, "expected": { "relation": "克", "direction": "a→b" } },
+        { "input": { "a": "水", "b": "火" }, "expected": { "relation": "克", "direction": "a→b" } },
+        { "input": { "a": "金", "b": "水" }, "expected": { "relation": "生", "direction": "a→b" } },
+        { "input": { "a": "木", "b": "木" }, "expected": { "relation": "none", "direction": "none" } }
+      ]
+    }
+  ],
+
+  "transfer_edges": [
+    {
+      "id": "edge.tarot-astro.strength-leo",
+      "from_node_id": "sym.tarot.strength",
+      "to_node_id": "sym.zodiac.leo",
+      "transfer_type": 3,
+      "historicity": "重建",
+      "source_strength": "中",
+      "sources": [
+        { "ref": "Eliphas Lévi《Dogme et Rituel de la Haute Magie》(1856) —— 22 张大牌对应 22 个希伯来字母，成为后世占星对应的中介通道", "url": "https://archive.org/stream/EliphasLeviDogmaYRitualDeLaAltaMagia/Eliphas+Levi+-+Dogma+y+Ritual+de+la+Alta+Magia_djvu.txt", "confidence": "中", "note": "R1 Q1.3；Lévi 体系中「愚者」的字母位置各家记载不一 → 争议" },
+        { "ref": "Golden Dawn, Mathers 编 *Book T*（1888 起）—— 把 36 decans 分派给四花色 2–10 共 36 张小牌，并给大牌行星／星座。**现存塔罗–占星体系的直接源头**", "url": "https://thelema.org/forum/topic/14125/book-t", "confidence": "中–高", "note": "R1 Q1.4" },
+        { "ref": "Dummett & Decker《A History of the Occult Tarot 1870–1970》—— 主张秘教／占星含义是 18–20 世纪重构，非塔罗原生", "confidence": "高", "note": "R1 Q1.5；该学派立场置信度高，但「学界一致」并不成立" }
+      ],
+      "paired_reverse_exercise_id": "ex.reverse.strength-order",
+      "analogy_label_present": false,
+      "four_part_structure": {
+        "known": "用户已掌握塔罗大阿卡纳的序列与单牌主题（T1.3 / T2.1）",
+        "in_new_system": "占星体系里的「星座」是黄道十二等分，其含义系统与塔罗牌义各自独立；塔罗牌面上出现星座符号是后世添加的（托特牌面印出，RWS 小牌不再显示占星符号）",
+        "relation_declaration": "类型 3 历史影响，historicity = 重建，来源强度 = 中。**表述必须是「这是 19 世纪某人建构出来的」，绝不能是「塔罗与占星本相通」**。证据链：Lévi 1856（希伯来字母中介）→ Golden Dawn Book T 1888（行星／星座归赋）",
+        "transfer_exercise_id": "ex.transfer.strength-leo"
+      }
+    }
+  ],
+
+  "skills": [
+    {
+      "id": "skill.b0.s4.wuxing-direction",
+      "statement": "能在给定任意两个五行符号时，判断二者之间的生克关系及其方向，并说出依据是哪一条闭循环",
+      "kind": "推导",
+      "judging_mode": "规则判定",
+      "schema_ids": ["S4"],
+      "confusable_with_skill_ids": ["skill.b0.s4.four-elements-direction"],
+      "provenance": {
+        "sources": [{ "ref": "R1 Q2.2（相生、相克两条闭循环）", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    },
+    {
+      "id": "skill.t7.astro-reconstruction",
+      "statement": "能说明塔罗大牌的行星／星座指派是 19 世纪 Golden Dawn 的近代建构（historicity = 重建），并指出该指派中可查证的可争议处",
+      "kind": "解释",
+      "judging_mode": "Rubric+AI",
+      "schema_ids": ["S8", "S9"],
+      "confusable_with_skill_ids": [],
+      "provenance": {
+        "sources": [{ "ref": "R1 Q1.3–Q1.6", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    }
+  ],
+
+  "skill_edges": [
+    { "from_skill_id": "skill.b0.s4.wuxing-direction", "to_skill_id": "skill.t7.astro-reconstruction", "requires_mastery_threshold": false }
+  ],
+
+  "rubrics": [
+    {
+      "id": "rubric.astro-reconstruction",
+      "name": "塔罗↔占星指派性质说明（含可争议处）",
+      "must_hit": [
+        "指出这条对应是 19 世纪西方秘教传统的**建构/归赋**，不是塔罗原生理论",
+        "给出至少一个文献节点（Lévi 1856 或 Golden Dawn Book T 1888）",
+        "指出一处**可查证的可争议处**（如 RWS 把力量置于 VIII、与 Golden Dawn 原序 VIII = 正义相反）"
+      ],
+      "should_hit": [
+        "区分「有文献链的重构」与「无来源的附会」两类不同性质",
+        "说明 Dummett & Decker 学派的重构说并非学界全体一致"
+      ],
+      "forbidden": [
+        "断言「塔罗与占星本相通」或暗示理论同源",
+        "把这条对应写成无历史前提的宇宙真理",
+        "断言具体事件（「你的狮子座力量会……」）",
+        "确定性话术（一定／必然／百分百）"
+      ],
+      "school_variance": "托特与 RWS 的次序不同（VIII/XI 互换）属容许的流派差异，不作为错误",
+      "process_rules": [
+        "声明所依据的文献节点",
+        "区分「文献记载的建构事实」与「我对其有效性的推测」"
+      ],
+      "is_school_comparison": false,
+      "feedback_template": {
+        "recognized": "已识别的正确要点",
+        "missing": "缺失的必需要素",
+        "tendency_error": "倾向性错误（如把建构当原生、把类比当等价）",
+        "correction": "具体修正",
+        "next_step": "下一步该练什么",
+        "not_evaluated": "不做评价（不对具体生活事件下判断）"
+      },
+      "provenance": {
+        "sources": [{ "ref": "V0.1 §11.1（Rubric 六段反馈结构）；R1 Q1.3–Q1.6", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    }
+  ],
+
+  "assessment_specs": [
+    {
+      "id": "spec.b0.s4",
+      "name": "B0 · S4 作用联结（规则判定）",
+      "skill_ids": ["skill.b0.s4.wuxing-direction"],
+      "rule_ids": ["rule.wuxing.shengke"],
+      "is_school_comparison": false,
+      "provenance": {
+        "sources": [{ "ref": "ADR-0013（B0 A 类样本：流派无关的符号层操作）", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    },
+    {
+      "id": "spec.astro-reconstruction",
+      "name": "跨体系节点 B · 塔罗↔占星（Rubric 判定）",
+      "skill_ids": ["skill.t7.astro-reconstruction"],
+      "rubric_id": "rubric.astro-reconstruction",
+      "rule_ids": [],
+      "is_school_comparison": false,
+      "provenance": {
+        "sources": [{ "ref": "ADR-0014（MVP 跨体系节点 = B）", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    }
+  ],
+
+  "exercises": [
+    {
+      "id": "ex.b0.s4.wuxing-1",
+      "kind": "关系判断",
+      "prompt": "给定两个五行符号「木」与「火」，判断二者之间的作用关系及其方向，并说出依据是哪一条闭循环。",
+      "skill_ids": ["skill.b0.s4.wuxing-direction"],
+      "assessment_spec_id": "spec.b0.s4",
+      "answer_key": {
+        "rule_id": "rule.wuxing.shengke",
+        "input": { "a": "木", "b": "火" },
+        "expected": { "relation": "生", "direction": "a→b" },
+        "choices": ["木生火", "火生木", "木克火", "火克木", "无作用关系"]
+      },
+      "requires_process": true,
+      "difficulty": "入门",
+      "provenance": {
+        "sources": [{ "ref": "R1 Q2.2", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    },
+    {
+      "id": "ex.transfer.strength-leo",
+      "kind": "开放式解读",
+      "prompt": "有人说「塔罗的力量牌就是狮子座，这是它本来的含义」。请说明这条对应是怎么来的、属于什么性质的关系，并给出你的文献依据。",
+      "skill_ids": ["skill.t7.astro-reconstruction"],
+      "assessment_spec_id": "spec.astro-reconstruction",
+      "requires_process": true,
+      "is_transfer_exercise_of_edge_id": "edge.tarot-astro.strength-leo",
+      "difficulty": "进阶",
+      "provenance": {
+        "sources": [{ "ref": "R1 Q1.3–Q1.6", "confidence": "中–高" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    },
+    {
+      "id": "ex.reverse.strength-order",
+      "kind": "开放式解读",
+      "prompt": "【反向练习】RWS 塔罗把「力量」放在第 VIII 位，「正义」放在第 XI 位。请查证 Golden Dawn 的原始归赋次序是什么，指出这个次序上的分歧说明了什么——它支持还是削弱「塔罗与占星本相通」的说法？",
+      "skill_ids": ["skill.t7.astro-reconstruction"],
+      "assessment_spec_id": "spec.astro-reconstruction",
+      "requires_process": true,
+      "is_reverse_exercise_of_edge_id": "edge.tarot-astro.strength-leo",
+      "difficulty": "进阶",
+      "provenance": {
+        "sources": [{ "ref": "R1 Q1.6（Waite 置 VIII=力量/狮子座、XI=正义/天秤座，与 Golden Dawn 原序 VIII=正义/天秤相反；托特沿用原序）", "confidence": "中" }],
+        "source_strength": "中", "controversy_flag": false, "review_status": "draft", "authored_by": "human", "version": 1
+      }
+    }
+  ],
+
+  "content_texts": [
+    { "id": "text.ex.b0.s4.wuxing-1", "owner_id": "ex.b0.s4.wuxing-1",
+      "text": "给定两个五行符号「木」与「火」，判断二者之间的作用关系及其方向，并说出依据是哪一条闭循环。" },
+    { "id": "text.ex.transfer.strength-leo", "owner_id": "ex.transfer.strength-leo",
+      "text": "有人说「塔罗的力量牌就是狮子座，这是它本来的含义」。请说明这条对应是怎么来的、属于什么性质的关系，并给出你的文献依据。" },
+    { "id": "text.ex.reverse.strength-order", "owner_id": "ex.reverse.strength-order",
+      "text": "RWS 塔罗把「力量」放在第 VIII 位，「正义」放在第 XI 位。请查证 Golden Dawn 的原始归赋次序是什么，指出这个次序上的分歧说明了什么。" },
+    { "id": "text.edge.tarot-astro.relation-declaration", "owner_id": "edge.tarot-astro.strength-leo",
+      "text": "这条对应属于「历史影响」类型，其 historicity 是「重建」：它是 19 世纪西方秘教传统建构出来的，而不是塔罗的原生理论。它与「同源同构」「理论等价」是不同性质的说法。" }
+  ]
+}
