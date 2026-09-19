@@ -63,11 +63,10 @@ jobs:
         run: touch apps/preview/dist/.nojekyll
 
       - uses: actions/configure-pages@v5
-        with:
-          # 试图让 workflow 自己打开 Pages（否则需要人工去 Settings → Pages 选 GitHub Actions）。
-          # 这一步依赖仓库给 GITHUB_TOKEN 的权限；若失败，去 Settings 手工开启即可
-          # —— 本步骤失败不会影响已经构建好的产物，重跑一次就发布。
-          enablement: true
+        # 注意：**不要**加 enablement: true。
+        # 「启用 Pages」是仓库设置操作，GITHUB_TOKEN 没有该权限（实测第 2 次部署正是死在这里：
+        # configure-pages 报 Resource not accessible by integration）。
+        # 首次必须在 Settings → Pages → Source 选一次 GitHub Actions，之后本步骤即正常通过。
 
       - uses: actions/upload-pages-artifact@v3
         with:
