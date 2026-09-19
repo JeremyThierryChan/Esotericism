@@ -216,3 +216,75 @@ describe('R9 禁用语检查在真实内容上的表现', () => {
     expect(t?.text).toContain('不是塔罗的原生理论');
   });
 });
+
+// ── T1–T3 复核：锁住本轮补的 schema 缺口与复核记录 ──────────────────────────
+
+describe('T1–T3 · 关系边必须可追溯（本轮补的缺口）', () => {
+  it('每条关系边都有 provenance —— 它此前连来源字段都没有', () => {
+    expect(bundle.relations.length).toBeGreaterThan(0);
+    for (const r of bundle.relations) {
+      expect(r.provenance, `${r.subtype} ${r.from_symbol_id}→${r.to_symbol_id} 缺 provenance`).toBeDefined();
+    }
+  });
+
+  it('每条关系边都有非空 sources（无来源不入库）', () => {
+    for (const r of bundle.relations) {
+      expect(r.provenance.sources.length, `${r.subtype} 边无来源`).toBeGreaterThan(0);
+    }
+  });
+
+  it('每条关系边都带复核记录，且记录可审计（有 claim / source / checked_at）', () => {
+    for (const r of bundle.relations) {
+      const vs = r.provenance.verifications;
+      expect(vs.length, `${r.subtype} 边无复核记录`).toBeGreaterThan(0);
+      for (const v of vs) {
+        expect(v.claim.length).toBeGreaterThan(0);
+        expect(v.source.ref.length).toBeGreaterThan(0);
+        expect(new Date(v.checked_at).toString()).not.toBe('Invalid Date');
+      }
+    }
+  });
+
+  it('复核结论必须明确，不得是「无法核实」却当作已核（那是待办不是结论）', () => {
+    const all = [
+      ...bundle.relations.flatMap((r) => r.provenance.verifications),
+      ...bundle.attribute_spaces.flatMap((s) => s.provenance.verifications),
+      ...bundle.rules.flatMap((r) => r.provenance.verifications),
+    ];
+    expect(all.length).toBeGreaterThan(0);
+    for (const v of all) {
+      expect(['证实', '部分证实', '证否', '无法核实']).toContain(v.outcome);
+    }
+  });
+});
+
+describe('T1–T3 · 当前尚无人工签字（这是刻意的，不是遗漏）', () => {
+  it('所有复核记录的 checked_by 都是 ai-candidate', () => {
+    const all = [
+      ...bundle.relations.flatMap((r) => r.provenance.verifications),
+      ...bundle.attribute_spaces.flatMap((s) => s.provenance.verifications),
+      ...bundle.rules.flatMap((r) => r.provenance.verifications),
+    ];
+    expect(all.every((v) => v.checked_by === 'ai-candidate')).toBe(true);
+  });
+
+  it('因此内容库里没有任何 reviewed 条目（AI 产出不能独自撑起 reviewed — 认识论原则 3 / R19）', () => {
+    const all = [
+      ...bundle.formalism,
+      ...bundle.attribute_spaces,
+      ...bundle.symbols,
+      ...bundle.systems,
+      ...bundle.schools,
+      ...bundle.concepts,
+      ...bundle.schemas,
+      ...bundle.rules,
+      ...bundle.relations,
+      ...bundle.skills,
+      ...bundle.rubrics,
+      ...bundle.assessment_specs,
+      ...bundle.exercises,
+      ...bundle.exercise_templates,
+    ];
+    expect(all.filter((e) => e.provenance.review_status === 'reviewed')).toEqual([]);
+  });
+});

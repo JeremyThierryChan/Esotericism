@@ -69,6 +69,7 @@ const RULE_BASIS = {
   R15: 'V0.2 §5.6 / M6（题目模板必须绑一个**带验证集**的规则，否则生成的题不可信）',
   R16: 'ADR-0021（模板参数空间必须落在规则的适用符号范围内）',
   R17: 'V0.1 §12（生成的题目必须与题型↔判分方式约束一致，且必须有答案键）',
+  R19: 'V0.1 §14 流水线（**升级 reviewed 必须有人工复核记录**）；认识论原则 3（AI 产出不能独自撑起 reviewed）',
   R18: 'ADR-0021（**关系表不完整时禁止生成全组合题** —— 否则「查不到」会被当成「无作用关系」出成错误答案）',
 } as const;
 
@@ -76,12 +77,17 @@ function hasSources(p: { sources: readonly unknown[] }): boolean {
   return p.sources.length > 0;
 }
 
-/** Layer 0 通用检查：R1a / R1b / R1c */
+/** Layer 0 通用检查：R1a / R1b / R1c / R19 */
 function checkProvenance(
   issues: ValidationIssue[],
   entityKind: string,
   entityId: string,
-  prov: { sources: readonly unknown[]; review_status: string; authored_by: string },
+  prov: {
+    sources: readonly unknown[];
+    review_status: string;
+    authored_by: string;
+    verifications?: readonly { checked_by: string; outcome: string }[];
+  },
 ): void {
   if (prov.review_status === 'reviewed' && !hasSources(prov)) {
     issues.push({
@@ -103,6 +109,26 @@ function checkProvenance(
       basis: RULE_BASIS.R1b,
     });
   }
+  // R19：升级 reviewed 必须有**人工**复核记录，且结论不是「证否」/「无法核实」。
+  // 光有 sources 只说明"引了哪本书"，不说明"书里怎么写的、有没有人核过"。
+  if (prov.review_status === 'reviewed') {
+    const humanOk = (prov.verifications ?? []).filter(
+      (v) => v.checked_by === 'human' && (v.outcome === '证实' || v.outcome === '部分证实'),
+    );
+    if (humanOk.length === 0) {
+      issues.push({
+        rule: 'R19',
+        severity: 'error',
+        entity_kind: entityKind,
+        entity_id: entityId,
+        message:
+          'reviewed 条目没有任何**人工**复核记录（verifications 中 checked_by=human 且 outcome 为证实/部分证实）。' +
+          'AI 找来源与摘原文可以（checked_by=ai-candidate），但升级 reviewed 必须有人签字。',
+        basis: RULE_BASIS.R19,
+      });
+    }
+  }
+
   if (prov.review_status === 'draft' && !hasSources(prov)) {
     issues.push({
       rule: 'R1c',
@@ -162,6 +188,7 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     ['skill', bundle.skills],
     ['rubric', bundle.rubrics],
     ['assessment_spec', bundle.assessment_specs],
+    ['relation', bundle.relations as never],
   ];
   for (const [kind, items] of layer0Groups) {
     for (const it of items) checkProvenance(issues, kind, it.id, it.provenance);

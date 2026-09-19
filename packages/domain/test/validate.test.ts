@@ -60,6 +60,47 @@ describe('R1 · 来源与审核状态（认识论原则 3）', () => {
   });
 });
 
+describe('R19 · 升级 reviewed 必须有人工复核记录', () => {
+  const withSchema = (prov: Record<string, unknown>) => {
+    const b = validBundle();
+    b.schemas = [
+      { id: 'S1', name: '指认', operation: '指出并命名符号', covers: [], provenance: { ...humanProvenance(true), review_status: 'reviewed', ...prov } as never },
+    ];
+    return b;
+  };
+
+  it('reviewed 但没有任何复核记录 → 失败', () => {
+    expect(ruleIds(withSchema({ verifications: [] }))).toContain('R19');
+  });
+
+  it('只有 AI 的复核记录 → 失败（AI 产出不能独自撑起 reviewed）', () => {
+    const b = withSchema({
+      verifications: [
+        { claim: 'x', source: { ref: 'y' }, checked_by: 'ai-candidate', checked_at: '2026-09-19T00:00:00.000Z', outcome: '证实' },
+      ],
+    });
+    expect(ruleIds(b)).toContain('R19');
+  });
+
+  it('人工复核但结论为「无法核实」→ 失败', () => {
+    const b = withSchema({
+      verifications: [
+        { claim: 'x', source: { ref: 'y' }, checked_by: 'human', checked_at: '2026-09-19T00:00:00.000Z', outcome: '无法核实' },
+      ],
+    });
+    expect(ruleIds(b)).toContain('R19');
+  });
+
+  it('人工复核且结论为「证实」→ 通过', () => {
+    const b = withSchema({
+      verifications: [
+        { claim: 'x', source: { ref: 'y' }, checked_by: 'human', checked_at: '2026-09-19T00:00:00.000Z', outcome: '证实' },
+      ],
+    });
+    expect(ruleIds(b)).not.toContain('R19');
+  });
+});
+
 describe('R2 · 类型 3 必须声明 historicity（V0.1 §5.2.1）', () => {
   const edge = (over: Partial<TransferEdge>): TransferEdge => ({
     id: 'edge.1',

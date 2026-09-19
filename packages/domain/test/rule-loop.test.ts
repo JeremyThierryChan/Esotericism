@@ -94,6 +94,7 @@ function bundleWithTemplate(): ContentBundle {
     from_symbol_id: `sym.wuxing.${from}`,
     to_symbol_id: `sym.wuxing.${to}`,
     direction: 'forward' as const,
+    provenance: humanProvenance(),
   });
   b.relations = [
     mk('木', '火', '生'),
@@ -116,6 +117,7 @@ function humanProvenance() {
     source_strength: '中' as const,
     controversy_flag: false,
     review_status: 'draft' as const,
+    verifications: [],
     authored_by: 'human' as const,
     version: 1,
   };

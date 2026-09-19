@@ -4,6 +4,7 @@
  * 依据：V0.1 §2 关系类型清单 + ADR-0010（两端都是 Symbol）
  */
 import { z } from 'zod';
+import { provenanceSchema } from '../layer0/provenance.js';
 
 export const RELATION_TYPES = [
   'has_attribute', // 属性归属（Symbol → 取值 Symbol），取代原 attribute_of
@@ -32,6 +33,11 @@ export type RelatedBySubtype = z.infer<typeof relatedBySubtypeSchema>;
 /**
  * 关系。**两端都是 `Symbol`** —— 这正是 ADR-0010 修订的理由：
  * 若五行的值是 `Attribute`，则「木生火」无处安放。
+ *
+ * ⚠️ 补记（T2 复核时发现）：关系边此前**没有 `provenance`**，
+ * 而它正是题目真值表的来源 —— 即「我们唯一可玩的内容」当时没有任何来源记录。
+ * V0.1 §14 规定元数据为「所有 Layer 1 实体共有」，`Relation` 属 Layer 1，故补齐。
+ * 一条 `related_by` 边就是一条**知识论断**（「木生火」），必须能追溯到文献。
  */
 export const relationSchema = z.object({
   type: z.literal('related_by'),
@@ -41,5 +47,7 @@ export const relationSchema = z.object({
   /** 有向关系（生/克）必须有方向；无向（合）则 direction = 'none' */
   direction: z.enum(['forward', 'none']),
   school_id: z.string().min(1).optional(),
+  /** 该关系边本身的来源与复核记录 */
+  provenance: provenanceSchema,
 });
 export type Relation = z.infer<typeof relationSchema>;

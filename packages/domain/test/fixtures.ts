@@ -24,6 +24,7 @@ export const humanProvenance = (sources = true) => ({
   source_strength: '中' as const,
   controversy_flag: false,
   review_status: 'draft' as const,
+  verifications: [],
   authored_by: 'human' as const,
   version: 1,
 });
