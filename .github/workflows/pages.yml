@@ -28,9 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 不传 version：pnpm 版本由根 package.json 的 "packageManager": "pnpm@11.24.0" 决定。
+      # pnpm/action-setup@v4 在 packageManager 字段存在时**拒绝**再接收 version 输入
+      # （报 "Multiple versions of pnpm specified"）—— 第一次部署就是死在这里。
+      # 单一事实来源也更对：版本只在一处声明。
       - uses: pnpm/action-setup@v4
-        with:
-          version: 11
 
       - uses: actions/setup-node@v4
         with:
