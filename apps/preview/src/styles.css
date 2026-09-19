@@ -1,129 +1,510 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   拜占庭色主题
+   ───────────────────────────────────────────────────────────────────────────
+   三主色（用户指定）：
+     · 拜占庭紫 Porphyry    —— 帝王紫 / 斑岩。拜占庭皇权之色，本品用为**底色**
+     · 圣像金 Icon Gold     —— 圣像画的金箔背光。本品用为**强调与状态**
+     · 石膏灰白 Gesso       —— 圣像画板底层石膏底（gesso）。本品用为**文字与浅色底**
+
+   关联色（拜占庭马赛克与手抄本常见材质，用于区分语义，避免全站只有紫金两色）：
+     · 青金石 Lapis         —— 群青，马赛克中最贵的颜料 → 历史/迁移类标签
+     · 孔雀石 Malachite     —— 拜占庭绿 → 规则判分、命中
+     · 朱砂 Cinnabar        —— 辰砂红 → 错误、未命中、违规
+     · 玫瑰茜 Rose Madder   —— 暖粉红 → AI / Rubric 判分类标签（与冷紫底靠明度+暖度区分）
+
+   ⚠️ 说明（本项目的来源纪律同样适用于设计）：
+     颜色**名称**取自拜占庭艺术的常见材质；但下面的具体十六进制值是**设计选择**，
+     不是历史色度测量值。历史上的「帝王紫」是骨螺紫（Tyrian purple，约 #66023C 一系），
+     斑岩（porphyry）是带紫调的红褐石；此处为屏幕可读性做了调整，不宣称还原古物原色。
+
+   两套主题（同一组语义令牌，只换映射）：
+     · 默认（深色）＝ 夜紫宫廷：斑岩底 + 金 + 石膏白字
+     · prefers-color-scheme: light ＝ 石膏画板：石膏底 + 金 + 斑岩字
+       （石膏灰白在浅色主题里才成为「底」，与圣像画板的实际做法一致）
+   两套主题的文字对比度均经脚本按 WCAG 2.1 计算校验（见 scripts/contrast.mjs）。
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --bg: #14110f;
-  --panel: #1e1a17;
-  --panel-2: #262019;
-  --line: #3a3128;
-  --ink: #ece4d8;
-  --ink-dim: #a99b88;
-  --accent: #c9a227;
-  --ok: #6fbf73;
-  --bad: #d9694c;
-  --warn: #d9a34c;
+  /* ── 斑岩紫 · Porphyry ───────────────────────────────────────────────── */
+  --porphyry-950: #180a1d;
+  --porphyry-900: #211028;
+  --porphyry-850: #291331;
+  --porphyry-800: #311739;
+  --porphyry-700: #40204a;
+  --porphyry-600: #522b5e;
+  --porphyry-500: #6b3a7a;
+  --porphyry-400: #8b58a0;
+  --porphyry-300: #ae85c0;
+  --porphyry-200: #d2b9dc;
+
+  /* ── 圣像金 · Icon Gold ──────────────────────────────────────────────── */
+  --gold-800: #4d3c16;
+  --gold-700: #6e5520;
+  --gold-600: #9a7a2e;
+  --gold-500: #c9a227;
+  --gold-400: #d9b44a;
+  --gold-300: #e8c766;
+  --gold-200: #f2dfa0;
+
+  /* ── 石膏灰白 · Gesso ────────────────────────────────────────────────── */
+  --gesso-100: #f5f1e8;
+  --gesso-200: #ede7db;
+  --gesso-300: #dcd5c6;
+  --gesso-400: #beb5a4;
+  --gesso-500: #9c927f;
+  --gesso-600: #7a7263;
+
+  /* ── 关联色 ──────────────────────────────────────────────────────────── */
+  --lapis-700: #223a72;
+  --lapis-500: #4468be;
+  --lapis-400: #7293da;
+  --lapis-300: #a6bfec;
+
+  --malachite-700: #1f4a38;
+  --malachite-500: #3f8c67;
+  --malachite-400: #63b08a;
+  --malachite-300: #97d0b1;
+
+  --cinnabar-700: #8e2e1f;
+  --cinnabar-500: #c4462f;
+  --cinnabar-400: #de7059;
+  --cinnabar-300: #eda894;
+
+  --madder-700: #7a3247;
+  --madder-500: #c46b85;
+  --madder-400: #dc93aa;
+  --madder-300: #edbccb;
+
+  /* ═══ 语义令牌 · 深色（夜紫宫廷） ═══════════════════════════════════ */
+  --bg: var(--porphyry-950);
+  --panel: var(--porphyry-850);
+  --panel-2: var(--porphyry-800);
+  --line: var(--porphyry-700);
+  --line-strong: var(--porphyry-600);
+
+  --ink: var(--gesso-200); /* 石膏白：主文字 */
+  --ink-dim: var(--gesso-400);
+  --ink-faint: var(--gesso-500);
+
+  --accent: var(--gold-400); /* 圣像金：强调 */
+  /* 更强的金。⚠️ 不叫 "bright"：深色主题下它是更亮，浅色主题下它是更深 ——
+     名字不能编码方向，否则浅色主题会出现「悬停反而看不清」。 */
+  --accent-strong: var(--gold-300);
+  --accent-ink: var(--porphyry-950); /* 金底上的字色 */
+
+  --ok: var(--malachite-400);
+  --bad: var(--cinnabar-400);
+  --warn: var(--gold-400);
+  --violation: var(--cinnabar-300);
+
+  /* 标签配色（徽标 = 浅字 + 同类深底） */
+  --tag-draft: var(--gold-300);
+  --tag-draft-bg: #3a2f16;
+  --tag-type3: var(--lapis-300);
+  --tag-type3-bg: #1c2a4c;
+  --tag-rule: var(--malachite-300);
+  --tag-rule-bg: #1b3a2c;
+  --tag-rubric: var(--madder-300);
+  --tag-rubric-bg: #3a1e2a;
+
+  /* 判分明细徽标 */
+  --v-hit-bg: #1b3a2c;
+  --v-miss-bg: #3a1f18;
+  --v-violation-bg: #4a1f1a;
+  --v-uncertain-bg: #3a2f16;
+
+  --choice-correct-bg: #1a3327;
+  --choice-wrong-bg: #331c16;
+
+  /* 顶部横幅：斑岩底 + 金边 */
+  --banner-bg-a: #35183d;
+  --banner-bg-b: #2c1433;
+  --banner-ink: var(--gold-200);
+  --banner-strong: var(--gold-300);
+
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-* { box-sizing: border-box; }
+/* ═══ 语义令牌 · 浅色（石膏画板） ═══════════════════════════════════════ */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f2ede3; /* 石膏底 */
+    --panel: #fbf8f1;
+    --panel-2: #f0eade;
+    --line: #d8cfbc;
+    --line-strong: #bfb39a;
+
+    --ink: var(--porphyry-900); /* 斑岩字压在石膏底上 */
+    --ink-dim: #5f5058;
+    --ink-faint: #6b5f67;
+
+    --accent: var(--gold-700); /* 浅底上金需压深才够对比 */
+    --accent-strong: #5c4819; /* 浅底上"更强"= 更深 */
+    --accent-ink: var(--gesso-100);
+
+    --ok: var(--malachite-700);
+    --bad: var(--cinnabar-700);
+    --warn: #7a5c14;
+    --violation: var(--cinnabar-700);
+
+    --tag-draft: #7a5c14;
+    --tag-draft-bg: #f5e8c4;
+    --tag-type3: var(--lapis-700);
+    --tag-type3-bg: #e2e8f7;
+    --tag-rule: var(--malachite-700);
+    --tag-rule-bg: #dcece3;
+    --tag-rubric: var(--madder-700);
+    --tag-rubric-bg: #f7e3e9;
+
+    --v-hit-bg: #dcece3;
+    --v-miss-bg: #f8e0d9;
+    --v-violation-bg: #f7d9d2;
+    --v-uncertain-bg: #f5e8c4;
+
+    --choice-correct-bg: #e4f0e8;
+    --choice-wrong-bg: #f8e2db;
+
+    --banner-bg-a: #f3e2bb;
+    --banner-bg-b: #eddaae;
+    --banner-ink: #4a3608;
+    --banner-strong: #4d1b33; /* 金调横幅上，粗体压斑岩紫最有辨识度 */
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 15px/1.7 system-ui, -apple-system, "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  font: 15px/1.7 system-ui, -apple-system, 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+  /* 石膏底的一点极淡金调，避免大面积纯色发死 */
+  background-image: radial-gradient(1200px 600px at 50% -10%, rgb(201 162 39 / 6%), transparent 70%);
+  background-attachment: fixed;
 }
 
-.wrap { max-width: 940px; margin: 0 auto; padding: 0 20px 80px; }
+.wrap {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
 
 /* ── 顶部横幅：内容未复核的声明必须显眼，不能埋脚注 ── */
 .banner {
-  background: repeating-linear-gradient(45deg, #3a2a12, #3a2a12 12px, #33240f 12px, #33240f 24px);
+  background: repeating-linear-gradient(45deg, var(--banner-bg-a), var(--banner-bg-a) 12px, var(--banner-bg-b) 12px, var(--banner-bg-b) 24px);
   border-bottom: 1px solid var(--accent);
   padding: 10px 20px;
   font-size: 13px;
-  color: #f0dcae;
+  color: var(--banner-ink);
 }
-.banner b { color: #ffd76e; }
+.banner b {
+  color: var(--banner-strong);
+}
+.banner code {
+  font-family: var(--mono);
+  color: inherit;
+  background: rgb(0 0 0 / 18%);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
 
-header.site { padding: 34px 0 8px; }
-header.site h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: .5px; }
-header.site .sub { color: var(--ink-dim); font-size: 14px; }
+header.site {
+  padding: 34px 0 8px;
+}
+header.site h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+}
+header.site .sub {
+  color: var(--ink-dim);
+  font-size: 14px;
+}
 
 h2 {
-  font-size: 17px; margin: 34px 0 12px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--line);
+  font-size: 17px;
+  margin: 34px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
 }
-h2 .idx { color: var(--accent); font-family: var(--mono); margin-right: 8px; }
+h2 .idx {
+  color: var(--accent);
+  font-family: var(--mono);
+  margin-right: 8px;
+}
+
+h3 {
+  color: var(--ink);
+}
 
 .card {
-  background: var(--panel); border: 1px solid var(--line);
-  border-radius: 10px; padding: 18px; margin: 14px 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  margin: 14px 0;
 }
-.card h3 { margin: 0 0 8px; font-size: 15px; }
+.card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
 
-.meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
 
 .tag {
-  font-family: var(--mono); font-size: 11.5px;
-  padding: 3px 8px; border-radius: 999px;
-  border: 1px solid var(--line); color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-dim);
   background: var(--panel-2);
 }
-.tag.draft { color: var(--warn); border-color: #6b5427; }
-.tag.type3 { color: #7fb3d5; border-color: #2f4f63; }
-.tag.rule { color: var(--ok); border-color: #33552f; }
-.tag.rubric { color: #c79fe0; border-color: #4d3a5c; }
+.tag.draft {
+  color: var(--tag-draft);
+  border-color: var(--tag-draft);
+  background: var(--tag-draft-bg);
+}
+.tag.type3 {
+  color: var(--tag-type3);
+  border-color: var(--tag-type3);
+  background: var(--tag-type3-bg);
+}
+.tag.rule {
+  color: var(--tag-rule);
+  border-color: var(--tag-rule);
+  background: var(--tag-rule-bg);
+}
+.tag.rubric {
+  color: var(--tag-rubric);
+  border-color: var(--tag-rubric);
+  background: var(--tag-rubric-bg);
+}
 
-.prompt { background: var(--panel-2); border-left: 3px solid var(--accent); padding: 12px 14px; border-radius: 0 8px 8px 0; }
+.prompt {
+  background: var(--panel-2);
+  border-left: 3px solid var(--accent);
+  padding: 12px 14px;
+  border-radius: 0 8px 8px 0;
+}
 
-.choices { display: grid; gap: 8px; margin: 12px 0; }
+.choices {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
 .choice {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--panel-2); border: 1px solid var(--line);
-  border-radius: 8px; padding: 10px 12px; cursor: pointer;
-}
-.choice:hover { border-color: var(--accent); }
-.choice input { accent-color: var(--accent); }
-.choice.correct { border-color: var(--ok); background: #1d2a1c; }
-.choice.wrong { border-color: var(--bad); background: #2c1c17; }
-
-textarea {
-  width: 100%; min-height: 110px; resize: vertical;
-  background: var(--panel-2); color: var(--ink);
-  border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
-  font: inherit;
-}
-textarea:focus { outline: none; border-color: var(--accent); }
-
-button {
-  background: var(--accent); color: #221c08; border: 0;
-  border-radius: 8px; padding: 9px 18px; font: inherit; font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
   cursor: pointer;
 }
-button:hover { filter: brightness(1.08); }
-button.ghost { background: transparent; color: var(--ink-dim); border: 1px solid var(--line); font-weight: 400; }
-
-.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
-
-.findings { margin: 14px 0 0; padding: 0; list-style: none; }
-.findings li {
-  display: flex; gap: 10px; padding: 7px 0;
-  border-bottom: 1px dashed var(--line); font-size: 14px;
+.choice:hover {
+  border-color: var(--accent);
 }
-.findings li:last-child { border-bottom: 0; }
-.v { font-family: var(--mono); font-size: 11.5px; padding: 2px 7px; border-radius: 5px; flex: none; height: fit-content; }
-.v.hit { background: #22401f; color: var(--ok); }
-.v.miss { background: #40241d; color: var(--bad); }
-.v.violation { background: #4a1f1a; color: #ff9d85; }
-.v.uncertain { background: #3a3320; color: var(--warn); }
+.choice input {
+  accent-color: var(--accent);
+}
+.choice.correct {
+  border-color: var(--ok);
+  background: var(--choice-correct-bg);
+}
+.choice.wrong {
+  border-color: var(--bad);
+  background: var(--choice-wrong-bg);
+}
 
-.verdict { font-weight: 700; margin-top: 12px; }
-.verdict.pass { color: var(--ok); }
-.verdict.fail { color: var(--bad); }
+textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  background: var(--panel-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+}
+textarea::placeholder {
+  color: var(--ink-faint);
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
 
-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { color: var(--ink-dim); font-weight: 500; font-size: 12.5px; }
-td code, .mono { font-family: var(--mono); font-size: 12.5px; color: var(--ink-dim); }
+button {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover {
+  background: var(--accent-strong);
+}
+button.ghost {
+  background: transparent;
+  color: var(--ink-dim);
+  border: 1px solid var(--line-strong);
+  font-weight: 400;
+}
+button.ghost:hover {
+  background: var(--panel-2);
+  color: var(--ink);
+}
 
-.note { color: var(--ink-dim); font-size: 13px; }
-.note.warn { color: var(--warn); }
-.hr { height: 1px; background: var(--line); margin: 26px 0; }
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
 
-details { margin-top: 10px; }
-summary { cursor: pointer; color: var(--ink-dim); font-size: 13.5px; }
-details[open] summary { color: var(--accent); margin-bottom: 8px; }
+.findings {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.findings li {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px;
+}
+.findings li:last-child {
+  border-bottom: 0;
+}
 
-.kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 13.5px; }
-.kv dt { color: var(--ink-dim); }
-.kv dd { margin: 0; }
+.v {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  flex: none;
+  height: fit-content;
+}
+.v.hit {
+  background: var(--v-hit-bg);
+  color: var(--ok);
+}
+.v.miss {
+  background: var(--v-miss-bg);
+  color: var(--bad);
+}
+.v.violation {
+  background: var(--v-violation-bg);
+  color: var(--violation);
+}
+.v.uncertain {
+  background: var(--v-uncertain-bg);
+  color: var(--warn);
+}
 
-footer { margin-top: 46px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--ink-dim); font-size: 12.5px; }
+.verdict {
+  font-weight: 700;
+  margin-top: 12px;
+  color: var(--ink);
+}
+.verdict.pass {
+  color: var(--ok);
+}
+.verdict.fail {
+  color: var(--bad);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+th,
+td {
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th {
+  color: var(--ink-dim);
+  font-weight: 500;
+  font-size: 12.5px;
+}
+td code,
+.mono {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.note {
+  color: var(--ink-dim);
+  font-size: 13px;
+}
+.note.warn {
+  color: var(--warn);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--accent);
+}
+
+.hr {
+  height: 1px;
+  background: var(--line);
+  margin: 26px 0;
+}
+
+details {
+  margin-top: 10px;
+}
+summary {
+  cursor: pointer;
+  color: var(--ink-dim);
+  font-size: 13.5px;
+}
+details[open] summary {
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 14px;
+  font-size: 13.5px;
+}
+.kv dt {
+  color: var(--ink-dim);
+}
+.kv dd {
+  margin: 0;
+}
+
+footer {
+  margin-top: 46px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: 12.5px;
+}

@@ -7,9 +7,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "vite",
-    "build": "vite build && node scripts/smoke.mjs",
+    "build": "node scripts/contrast.mjs && vite build && node scripts/smoke.mjs",
     "preview": "vite preview",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "contrast": "node scripts/contrast.mjs"
   },
   "dependencies": {
     "@dlg/content": "workspace:*",

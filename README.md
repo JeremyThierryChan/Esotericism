@@ -56,7 +56,12 @@ pnpm test                                       # 119 条测试
 pnpm validate                                   # 内容库 CI 校验（含机制 A 派生视图输出）
 pnpm spike                                      # 规则引擎 spike 报告
 pnpm --filter @dlg/preview dev                  # 试玩预览站
+pnpm --filter @dlg/preview contrast             # 色主题对比度校验（WCAG 2.1，两套主题 30 组配对）
 ```
+
+预览站配色为**拜占庭色**：拜占庭紫（斑岩）作底、圣像金作强调、石膏灰白作用字；
+另有一套跟随系统深浅色偏好的「石膏画板」浅色主题。对比度由脚本按 WCAG 2.1 校验并接入构建门
+（不过就不产出产物）。详见 `docs/STEP3-预览站与GitHub-Pages.md` §三之二。
 
 ## 关键设计（为什么它不是一个普通的术数 App）
 
@@ -400,6 +405,7 @@ pnpm validate                                   # CI 校验（真实内容库 + 
 pnpm test                                       # 119 条
 pnpm spike                                      # 规则引擎 spike
 pnpm --filter @dlg/preview dev                  # 试玩预览站
+pnpm --filter @dlg/preview contrast             # 色主题对比度校验（WCAG 2.1，两套主题 30 组配对）
 ```
 
 **注意：** 若发现 schema 需要改，**先改 ADR 再改 schema**。`symbol_id`（共享还是新建）、五行是属性还是符号、`transfer_type` 取值域这三处变动 = 重写全部内容条目。
