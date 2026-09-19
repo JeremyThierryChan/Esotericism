@@ -318,9 +318,612 @@
         "authored_by": "human",
         "version": 1
       }
+    },
+    {
+      "id": "sym.yao.阳",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "阳爻",
+      "aliases": [
+        "—",
+        "九"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.yao.阴",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "阴爻",
+      "aliases": [
+        "- -",
+        "六"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.坤",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "坤",
+      "aliases": [
+        "☷"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.艮",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "艮",
+      "aliases": [
+        "☶"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.坎",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "坎",
+      "aliases": [
+        "☵"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.巽",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "巽",
+      "aliases": [
+        "☴"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.震",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "震",
+      "aliases": [
+        "☳"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.离",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "离",
+      "aliases": [
+        "☲"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.兑",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "兑",
+      "aliases": [
+        "☱"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "sym.bagua.乾",
+      "formalism_id": "east-xiangshu",
+      "canonical_name": "乾",
+      "aliases": [
+        "☰"
+      ],
+      "symbol_kind": "native",
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
     }
   ],
-  "has_attributes": [],
+  "has_attributes": [
+    {
+      "symbol_id": "sym.bagua.坤",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.土"
+    },
+    {
+      "symbol_id": "sym.bagua.艮",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.土"
+    },
+    {
+      "symbol_id": "sym.bagua.坎",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.水"
+    },
+    {
+      "symbol_id": "sym.bagua.巽",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.木"
+    },
+    {
+      "symbol_id": "sym.bagua.震",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.木"
+    },
+    {
+      "symbol_id": "sym.bagua.离",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.火"
+    },
+    {
+      "symbol_id": "sym.bagua.兑",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.金"
+    },
+    {
+      "symbol_id": "sym.bagua.乾",
+      "space_id": "space.wuxing",
+      "value_symbol_id": "sym.wuxing.金"
+    }
+  ],
   "symbol_usages": [
     {
       "symbol_id": "sym.wuxing.木",
@@ -977,6 +1580,906 @@
           }
         ]
       }
+    },
+    {
+      "id": "rule.liuyao.trigram-by-yao",
+      "system_id": "system.liuyao",
+      "school_id": "school.liuyao.zengshanbu",
+      "name": "由三爻阴阳推八卦（含卦象与五行）",
+      "procedure_ref": "yao/bagua#resolveTrigramByYao",
+      "test_set_id": "ruleset.liuyao.trigram",
+      "applies_to_symbol_ids": [
+        "sym.bagua.坤",
+        "sym.bagua.艮",
+        "sym.bagua.坎",
+        "sym.bagua.巽",
+        "sym.bagua.震",
+        "sym.bagua.离",
+        "sym.bagua.兑",
+        "sym.bagua.乾"
+      ],
+      "table": {
+        "description": "八卦表：位组合（自初爻起，阳=1）→ 卦名/卦象/五行。来源《梅花易數》卷一「八卦象例」与「八宮所屬五行」",
+        "columns": [
+          {
+            "key": "bits",
+            "label": "位组合（自初爻起，阳=1）",
+            "type": "string"
+          },
+          {
+            "key": "name",
+            "label": "卦名",
+            "type": "string"
+          },
+          {
+            "key": "symbol",
+            "label": "卦象",
+            "type": "string"
+          },
+          {
+            "key": "element",
+            "label": "五行",
+            "type": "string"
+          }
+        ],
+        "rows": [
+          {
+            "bits": "000",
+            "name": "坤",
+            "symbol": "☷",
+            "element": "土"
+          },
+          {
+            "bits": "001",
+            "name": "艮",
+            "symbol": "☶",
+            "element": "土"
+          },
+          {
+            "bits": "010",
+            "name": "坎",
+            "symbol": "☵",
+            "element": "水"
+          },
+          {
+            "bits": "011",
+            "name": "巽",
+            "symbol": "☴",
+            "element": "木"
+          },
+          {
+            "bits": "100",
+            "name": "震",
+            "symbol": "☳",
+            "element": "木"
+          },
+          {
+            "bits": "101",
+            "name": "离",
+            "symbol": "☲",
+            "element": "火"
+          },
+          {
+            "bits": "110",
+            "name": "兑",
+            "symbol": "☱",
+            "element": "金"
+          },
+          {
+            "bits": "111",
+            "name": "乾",
+            "symbol": "☰",
+            "element": "金"
+          }
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八卦（八宫）的五行归属：乾兑金、坤艮土、震巽木、坎水、离火",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八宮所屬五行」",
+            "excerpt": "乾、兌，金；坤、艮，土；震、巽，木；坎，水；離，火。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "与我们自己的体系文本逐条一致。同页「卦氣旺」：震巽木旺於春、離火旺於夏、乾兌金旺於秋、坎水旺於冬、坤艮土旺於辰戌丑未月 —— 后续旺衰内容可直接引用。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "rule.liuyao.hexagram-by-yao",
+      "system_id": "system.liuyao",
+      "school_id": "school.liuyao.zengshanbu",
+      "name": "由六爻阴阳定本卦与世应（含所属宫）",
+      "procedure_ref": "yao/hexagram#resolveHexagramByYao",
+      "test_set_id": "ruleset.liuyao.hexagram",
+      "applies_to_symbol_ids": [
+        "sym.bagua.坤",
+        "sym.bagua.艮",
+        "sym.bagua.坎",
+        "sym.bagua.巽",
+        "sym.bagua.震",
+        "sym.bagua.离",
+        "sym.bagua.兑",
+        "sym.bagua.乾"
+      ],
+      "table": {
+        "description": "六十四卦表：下卦/上卦位组合 → 卦名/上下卦/所属宫/宫五行/世爻位置/位次类型。卦序见《鄭氏易譜》《周易本義》《易學義林》；世位见《鄭氏易譜》",
+        "columns": [
+          {
+            "key": "key",
+            "label": "下卦/上卦 位组合",
+            "type": "string"
+          },
+          {
+            "key": "name",
+            "label": "卦名",
+            "type": "string"
+          },
+          {
+            "key": "upper_name",
+            "label": "上卦",
+            "type": "string"
+          },
+          {
+            "key": "lower_name",
+            "label": "下卦",
+            "type": "string"
+          },
+          {
+            "key": "palace",
+            "label": "所属宫",
+            "type": "string"
+          },
+          {
+            "key": "palace_element",
+            "label": "宫五行",
+            "type": "string"
+          },
+          {
+            "key": "shi",
+            "label": "世爻位置",
+            "type": "number"
+          },
+          {
+            "key": "position_kind",
+            "label": "位次类型",
+            "type": "string"
+          }
+        ],
+        "rows": [
+          {
+            "key": "000/000",
+            "name": "坤为地",
+            "upper_name": "坤",
+            "lower_name": "坤",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "000/001",
+            "name": "山地剥",
+            "upper_name": "艮",
+            "lower_name": "坤",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "000/010",
+            "name": "水地比",
+            "upper_name": "坎",
+            "lower_name": "坤",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "000/011",
+            "name": "风地观",
+            "upper_name": "巽",
+            "lower_name": "坤",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "000/100",
+            "name": "雷地豫",
+            "upper_name": "震",
+            "lower_name": "坤",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "000/101",
+            "name": "火地晋",
+            "upper_name": "离",
+            "lower_name": "坤",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "000/110",
+            "name": "泽地萃",
+            "upper_name": "兑",
+            "lower_name": "坤",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "000/111",
+            "name": "天地否",
+            "upper_name": "乾",
+            "lower_name": "坤",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "001/000",
+            "name": "地山谦",
+            "upper_name": "坤",
+            "lower_name": "艮",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "001/001",
+            "name": "艮为山",
+            "upper_name": "艮",
+            "lower_name": "艮",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "001/010",
+            "name": "水山蹇",
+            "upper_name": "坎",
+            "lower_name": "艮",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "001/011",
+            "name": "风山渐",
+            "upper_name": "巽",
+            "lower_name": "艮",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "001/100",
+            "name": "雷山小过",
+            "upper_name": "震",
+            "lower_name": "艮",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "001/101",
+            "name": "火山旅",
+            "upper_name": "离",
+            "lower_name": "艮",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "001/110",
+            "name": "泽山咸",
+            "upper_name": "兑",
+            "lower_name": "艮",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "001/111",
+            "name": "天山遁",
+            "upper_name": "乾",
+            "lower_name": "艮",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "010/000",
+            "name": "地水师",
+            "upper_name": "坤",
+            "lower_name": "坎",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "010/001",
+            "name": "山水蒙",
+            "upper_name": "艮",
+            "lower_name": "坎",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "010/010",
+            "name": "坎为水",
+            "upper_name": "坎",
+            "lower_name": "坎",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "010/011",
+            "name": "风水涣",
+            "upper_name": "巽",
+            "lower_name": "坎",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "010/100",
+            "name": "雷水解",
+            "upper_name": "震",
+            "lower_name": "坎",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "010/101",
+            "name": "火水未济",
+            "upper_name": "离",
+            "lower_name": "坎",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "010/110",
+            "name": "泽水困",
+            "upper_name": "兑",
+            "lower_name": "坎",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "010/111",
+            "name": "天水讼",
+            "upper_name": "乾",
+            "lower_name": "坎",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "011/000",
+            "name": "地风升",
+            "upper_name": "坤",
+            "lower_name": "巽",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "011/001",
+            "name": "山风蛊",
+            "upper_name": "艮",
+            "lower_name": "巽",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "011/010",
+            "name": "水风井",
+            "upper_name": "坎",
+            "lower_name": "巽",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "011/011",
+            "name": "巽为风",
+            "upper_name": "巽",
+            "lower_name": "巽",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "011/100",
+            "name": "雷风恒",
+            "upper_name": "震",
+            "lower_name": "巽",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "011/101",
+            "name": "火风鼎",
+            "upper_name": "离",
+            "lower_name": "巽",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "011/110",
+            "name": "泽风大过",
+            "upper_name": "兑",
+            "lower_name": "巽",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "011/111",
+            "name": "天风姤",
+            "upper_name": "乾",
+            "lower_name": "巽",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "100/000",
+            "name": "地雷复",
+            "upper_name": "坤",
+            "lower_name": "震",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "100/001",
+            "name": "山雷颐",
+            "upper_name": "艮",
+            "lower_name": "震",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "100/010",
+            "name": "水雷屯",
+            "upper_name": "坎",
+            "lower_name": "震",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "100/011",
+            "name": "风雷益",
+            "upper_name": "巽",
+            "lower_name": "震",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "100/100",
+            "name": "震为雷",
+            "upper_name": "震",
+            "lower_name": "震",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "100/101",
+            "name": "火雷噬嗑",
+            "upper_name": "离",
+            "lower_name": "震",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "100/110",
+            "name": "泽雷随",
+            "upper_name": "兑",
+            "lower_name": "震",
+            "palace": "震宫",
+            "palace_element": "木",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "100/111",
+            "name": "天雷无妄",
+            "upper_name": "乾",
+            "lower_name": "震",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "101/000",
+            "name": "地火明夷",
+            "upper_name": "坤",
+            "lower_name": "离",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "101/001",
+            "name": "山火贲",
+            "upper_name": "艮",
+            "lower_name": "离",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "101/010",
+            "name": "水火既济",
+            "upper_name": "坎",
+            "lower_name": "离",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "101/011",
+            "name": "风火家人",
+            "upper_name": "巽",
+            "lower_name": "离",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "101/100",
+            "name": "雷火丰",
+            "upper_name": "震",
+            "lower_name": "离",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "101/101",
+            "name": "离为火",
+            "upper_name": "离",
+            "lower_name": "离",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "101/110",
+            "name": "泽火革",
+            "upper_name": "兑",
+            "lower_name": "离",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "101/111",
+            "name": "天火同人",
+            "upper_name": "乾",
+            "lower_name": "离",
+            "palace": "离宫",
+            "palace_element": "火",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "110/000",
+            "name": "地泽临",
+            "upper_name": "坤",
+            "lower_name": "兑",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "110/001",
+            "name": "山泽损",
+            "upper_name": "艮",
+            "lower_name": "兑",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "110/010",
+            "name": "水泽节",
+            "upper_name": "坎",
+            "lower_name": "兑",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "110/011",
+            "name": "风泽中孚",
+            "upper_name": "巽",
+            "lower_name": "兑",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "110/100",
+            "name": "雷泽归妹",
+            "upper_name": "震",
+            "lower_name": "兑",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "110/101",
+            "name": "火泽睽",
+            "upper_name": "离",
+            "lower_name": "兑",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "110/110",
+            "name": "兑为泽",
+            "upper_name": "兑",
+            "lower_name": "兑",
+            "palace": "兑宫",
+            "palace_element": "金",
+            "shi": 6,
+            "position_kind": "本宫"
+          },
+          {
+            "key": "110/111",
+            "name": "天泽履",
+            "upper_name": "乾",
+            "lower_name": "兑",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "111/000",
+            "name": "地天泰",
+            "upper_name": "坤",
+            "lower_name": "乾",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 3,
+            "position_kind": "三世"
+          },
+          {
+            "key": "111/001",
+            "name": "山天大畜",
+            "upper_name": "艮",
+            "lower_name": "乾",
+            "palace": "艮宫",
+            "palace_element": "土",
+            "shi": 2,
+            "position_kind": "二世"
+          },
+          {
+            "key": "111/010",
+            "name": "水天需",
+            "upper_name": "坎",
+            "lower_name": "乾",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 4,
+            "position_kind": "游魂"
+          },
+          {
+            "key": "111/011",
+            "name": "风天小畜",
+            "upper_name": "巽",
+            "lower_name": "乾",
+            "palace": "巽宫",
+            "palace_element": "木",
+            "shi": 1,
+            "position_kind": "一世"
+          },
+          {
+            "key": "111/100",
+            "name": "雷天大壮",
+            "upper_name": "震",
+            "lower_name": "乾",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 4,
+            "position_kind": "四世"
+          },
+          {
+            "key": "111/101",
+            "name": "火天大有",
+            "upper_name": "离",
+            "lower_name": "乾",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 3,
+            "position_kind": "归魂"
+          },
+          {
+            "key": "111/110",
+            "name": "泽天夬",
+            "upper_name": "兑",
+            "lower_name": "乾",
+            "palace": "坤宫",
+            "palace_element": "土",
+            "shi": 5,
+            "position_kind": "五世"
+          },
+          {
+            "key": "111/111",
+            "name": "乾为天",
+            "upper_name": "乾",
+            "lower_name": "乾",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 6,
+            "position_kind": "本宫"
+          }
+        ]
+      },
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "京房八宫卦序：每宫八卦，次第为本宫、一世…五世、游魂、归魂（64 卦名称与所属宫）",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「京房八宫卦…乃序八宫」段；巽/離宫另见《周易本義》，坤/兌宫另见《易學義林》",
+            "excerpt": "京房八宫卦，焦延寿易林四千九十六卦，乃一卦变为六十四卦也。传诸京房，房为易传，乃序八宫。乾为天，天风姤、天山遁、天地否，风地观、山地剥、火地晋、火天大有。坎为水，水泽节，水雷屯，水火既济，泽火革，雷火丰，地火明夷，地水师。艮为山……震为雷……",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "乾/坎/艮/震 宫逐字一致；巽/離宫对《周易本義》，坤/兌宫对《易學義林》；震宫另由 ctext《卜筮全書》卷之一〈啟蒙節要〉独立印证。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八宫卦的世爻位置：本宫世六、一世至五世世初至五、游魂世四、归魂世三；应爻＝世爻隔三位",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「人易/天易/鬼易」段",
+            "excerpt": "变至四爻为四世，是曰人易；第五卦变至五爻为五世，亦曰天易。上爻置不变也。故第六卦变回四爻为四世，是为游魂；第七卦则将下三爻尽变还本宫贞体而为三世，是为归魂。游魂、归魂，名曰鬼易。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "部分证实",
+            "note": "**游魂=四世、归魂=三世** 有古典直接引文。其余：「本宫世六」「一世世初…五世世五」由「序八宫」生成方式自洽推出，本轮未取到逐字原文；**「应爻＝世爻隔三位」未取到古典直接引文** —— 签字前请补核，或标为本课程约定。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
     }
   ],
   "rule_test_sets": [
@@ -1052,6 +2555,384 @@
             "relation": "none",
             "direction": "none"
           }
+        }
+      ]
+    },
+    {
+      "rule_id": "rule.liuyao.trigram-by-yao",
+      "cases": [
+        {
+          "input": {
+            "lines": [
+              1,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "乾",
+            "symbol": "☰",
+            "element": "金",
+            "bits": "111"
+          },
+          "note": "乾三連"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              0
+            ]
+          },
+          "expected": {
+            "name": "坤",
+            "symbol": "☷",
+            "element": "土",
+            "bits": "000"
+          },
+          "note": "坤六斷"
+        },
+        {
+          "input": {
+            "lines": [
+              1,
+              0,
+              0
+            ]
+          },
+          "expected": {
+            "name": "震",
+            "symbol": "☳",
+            "element": "木",
+            "bits": "100"
+          },
+          "note": "震仰盂（初爻阳）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              1
+            ]
+          },
+          "expected": {
+            "name": "艮",
+            "symbol": "☶",
+            "element": "土",
+            "bits": "001"
+          },
+          "note": "艮覆碗（上爻阳）"
+        },
+        {
+          "input": {
+            "lines": [
+              1,
+              0,
+              1
+            ]
+          },
+          "expected": {
+            "name": "离",
+            "symbol": "☲",
+            "element": "火",
+            "bits": "101"
+          },
+          "note": "離中虛"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              1,
+              0
+            ]
+          },
+          "expected": {
+            "name": "坎",
+            "symbol": "☵",
+            "element": "水",
+            "bits": "010"
+          },
+          "note": "坎中滿"
+        },
+        {
+          "input": {
+            "lines": [
+              1,
+              1,
+              0
+            ]
+          },
+          "expected": {
+            "name": "兑",
+            "symbol": "☱",
+            "element": "金",
+            "bits": "110"
+          },
+          "note": "兌上缺"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "巽",
+            "symbol": "☴",
+            "element": "木",
+            "bits": "011"
+          },
+          "note": "巽下斷"
+        }
+      ]
+    },
+    {
+      "rule_id": "rule.liuyao.hexagram-by-yao",
+      "cases": [
+        {
+          "input": {
+            "lines": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "乾为天",
+            "lower": "乾",
+            "upper": "乾",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 6,
+            "ying": 3,
+            "position_kind": "本宫",
+            "bits": "111111"
+          },
+          "note": "乾为天（乾宫·本宫·世6应3）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "天风姤",
+            "lower": "巽",
+            "upper": "乾",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 1,
+            "ying": 4,
+            "position_kind": "一世",
+            "bits": "011111"
+          },
+          "note": "天风姤（乾宫·一世·世1应4）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "天山遁",
+            "lower": "艮",
+            "upper": "乾",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 2,
+            "ying": 5,
+            "position_kind": "二世",
+            "bits": "001111"
+          },
+          "note": "天山遁（乾宫·二世·世2应5）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "天地否",
+            "lower": "坤",
+            "upper": "乾",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 3,
+            "ying": 6,
+            "position_kind": "三世",
+            "bits": "000111"
+          },
+          "note": "天地否（乾宫·三世·世3应6）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          "expected": {
+            "name": "风地观",
+            "lower": "坤",
+            "upper": "巽",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 4,
+            "ying": 1,
+            "position_kind": "四世",
+            "bits": "000011"
+          },
+          "note": "风地观（乾宫·四世·世4应1）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          "expected": {
+            "name": "山地剥",
+            "lower": "坤",
+            "upper": "艮",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 5,
+            "ying": 2,
+            "position_kind": "五世",
+            "bits": "000001"
+          },
+          "note": "山地剥（乾宫·五世·世5应2）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              1
+            ]
+          },
+          "expected": {
+            "name": "火地晋",
+            "lower": "坤",
+            "upper": "离",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 4,
+            "ying": 1,
+            "position_kind": "游魂",
+            "bits": "000101"
+          },
+          "note": "火地晋（乾宫·游魂·世4应1）"
+        },
+        {
+          "input": {
+            "lines": [
+              1,
+              1,
+              1,
+              1,
+              0,
+              1
+            ]
+          },
+          "expected": {
+            "name": "火天大有",
+            "lower": "乾",
+            "upper": "离",
+            "palace": "乾宫",
+            "palace_element": "金",
+            "shi": 3,
+            "ying": 6,
+            "position_kind": "归魂",
+            "bits": "111101"
+          },
+          "note": "火天大有（乾宫·归魂·世3应6）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              1,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          "expected": {
+            "name": "坎为水",
+            "lower": "坎",
+            "upper": "坎",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 6,
+            "ying": 3,
+            "position_kind": "本宫",
+            "bits": "010010"
+          },
+          "note": "坎为水（坎宫·本宫·世6应3）"
+        },
+        {
+          "input": {
+            "lines": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "expected": {
+            "name": "地水师",
+            "lower": "坎",
+            "upper": "坤",
+            "palace": "坎宫",
+            "palace_element": "水",
+            "shi": 3,
+            "ying": 6,
+            "position_kind": "归魂",
+            "bits": "010000"
+          },
+          "note": "地水师（坎宫·归魂·世3应6）"
         }
       ]
     }
@@ -1138,6 +3019,109 @@
         ],
         "source_strength": "中",
         "controversy_flag": false,
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "skill.liuyao.trigram-by-yao",
+      "statement": "能在给定三爻阴阳（自初爻起）时，推出对应的八卦名与卦象，并说出依据是哪一条取象口诀",
+      "kind": "推导",
+      "judging_mode": "规则判定",
+      "schema_ids": [
+        "S5"
+      ],
+      "confusable_with_skill_ids": [],
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "skill.liuyao.hexagram-by-yao",
+      "statement": "能由六爻阴阳定出本卦（卦名、上卦、下卦、所属宫），并说出世爻与应爻各在第几爻",
+      "kind": "推导",
+      "judging_mode": "规则判定",
+      "schema_ids": [
+        "S5",
+        "S6"
+      ],
+      "confusable_with_skill_ids": [],
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "京房八宫卦序：每宫八卦，次第为本宫、一世…五世、游魂、归魂（64 卦名称与所属宫）",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「京房八宫卦…乃序八宫」段；巽/離宫另见《周易本義》，坤/兌宫另见《易學義林》",
+            "excerpt": "京房八宫卦，焦延寿易林四千九十六卦，乃一卦变为六十四卦也。传诸京房，房为易传，乃序八宫。乾为天，天风姤、天山遁、天地否，风地观、山地剥、火地晋、火天大有。坎为水，水泽节，水雷屯，水火既济，泽火革，雷火丰，地火明夷，地水师。艮为山……震为雷……",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "乾/坎/艮/震 宫逐字一致；巽/離宫对《周易本義》，坤/兌宫对《易學義林》；震宫另由 ctext《卜筮全書》卷之一〈啟蒙節要〉独立印证。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八宫卦的世爻位置：本宫世六、一世至五世世初至五、游魂世四、归魂世三；应爻＝世爻隔三位",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「人易/天易/鬼易」段",
+            "excerpt": "变至四爻为四世，是曰人易；第五卦变至五爻为五世，亦曰天易。上爻置不变也。故第六卦变回四爻为四世，是为游魂；第七卦则将下三爻尽变还本宫贞体而为三世，是为归魂。游魂、归魂，名曰鬼易。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "部分证实",
+            "note": "**游魂=四世、归魂=三世** 有古典直接引文。其余：「本宫世六」「一世世初…五世世五」由「序八宫」生成方式自洽推出，本轮未取到逐字原文；**「应爻＝世爻隔三位」未取到古典直接引文** —— 签字前请补核，或标为本课程约定。⚠️ 待人工签字。"
+          }
+        ],
         "review_status": "draft",
         "authored_by": "human",
         "version": 1
@@ -1246,6 +3230,110 @@
         "authored_by": "human",
         "version": 1
       }
+    },
+    {
+      "id": "spec.liuyao.trigram",
+      "name": "六爻基础 · 由三爻定八卦（规则判定）",
+      "skill_ids": [
+        "skill.liuyao.trigram-by-yao"
+      ],
+      "rule_ids": [
+        "rule.liuyao.trigram-by-yao"
+      ],
+      "is_school_comparison": false,
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
+      "id": "spec.liuyao.hexagram",
+      "name": "六爻基础 · 由六爻定本卦与世应（规则判定）",
+      "skill_ids": [
+        "skill.liuyao.hexagram-by-yao"
+      ],
+      "rule_ids": [
+        "rule.liuyao.hexagram-by-yao"
+      ],
+      "is_school_comparison": false,
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "京房八宫卦序：每宫八卦，次第为本宫、一世…五世、游魂、归魂（64 卦名称与所属宫）",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「京房八宫卦…乃序八宫」段；巽/離宫另见《周易本義》，坤/兌宫另见《易學義林》",
+            "excerpt": "京房八宫卦，焦延寿易林四千九十六卦，乃一卦变为六十四卦也。传诸京房，房为易传，乃序八宫。乾为天，天风姤、天山遁、天地否，风地观、山地剥、火地晋、火天大有。坎为水，水泽节，水雷屯，水火既济，泽火革，雷火丰，地火明夷，地水师。艮为山……震为雷……",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "乾/坎/艮/震 宫逐字一致；巽/離宫对《周易本義》，坤/兌宫对《易學義林》；震宫另由 ctext《卜筮全書》卷之一〈啟蒙節要〉独立印证。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八宫卦的世爻位置：本宫世六、一世至五世世初至五、游魂世四、归魂世三；应爻＝世爻隔三位",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「人易/天易/鬼易」段",
+            "excerpt": "变至四爻为四世，是曰人易；第五卦变至五爻为五世，亦曰天易。上爻置不变也。故第六卦变回四爻为四世，是为游魂；第七卦则将下三爻尽变还本宫贞体而为三世，是为归魂。游魂、归魂，名曰鬼易。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "部分证实",
+            "note": "**游魂=四世、归魂=三世** 有古典直接引文。其余：「本宫世六」「一世世初…五世世五」由「序八宫」生成方式自洽推出，本轮未取到逐字原文；**「应爻＝世爻隔三位」未取到古典直接引文** —— 签字前请补核，或标为本课程约定。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
     }
   ],
   "exercises": [
@@ -1344,6 +3432,57 @@
   ],
   "exercise_templates": [
     {
+      "id": "tpl.liuyao.trigram",
+      "name": "由三爻阴阳定八卦（全组合）",
+      "skill_ids": [
+        "skill.liuyao.trigram-by-yao"
+      ],
+      "kind": "关系判断",
+      "assessment_spec_id": "spec.liuyao.trigram",
+      "rule_id": "rule.liuyao.trigram-by-yao",
+      "parameter_space": {
+        "mode": "bit-combinations",
+        "bit_length": 3
+      },
+      "prompt_template": "下面三爻，自初爻起依次为：{yao}。它们组成哪一个八卦？",
+      "answer_field": "name",
+      "choices_mode": "answer-field-distinct",
+      "difficulty": "入门",
+      "requires_process": true,
+      "max_instances": 8,
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《梅花易數》卷一（維基文庫本）",
+            "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "八卦的位组合（自初爻起，阳=1 阴=0）：乾111 兑110 离101 震100 巽011 坎010 艮001 坤000",
+            "source": {
+              "ref": "《梅花易數》卷一（維基文庫本）",
+              "url": "https://zh.wikisource.org/zh-hant/%E6%A2%85%E8%8A%B1%E6%98%93%E6%95%B8/%E5%8D%B7%E4%B8%80",
+              "confidence": "中–高"
+            },
+            "locator": "《梅花易數》卷一「八卦象例」",
+            "excerpt": "乾三連，坤六斷，震仰盂，艮覆碗，離中虛，坎中滿，兌上缺，巽下斷。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "「震仰盂」=初爻阳、「艮覆碗」=上爻阳、「離中虛」=中爻阴、「坎中滿」=中爻阳、「兌上缺」=上爻阴、「巽下斷」=初爻阴，与 8 个位组合逐条对应。**第二独立来源**：《易學義林》「震仰盂，艮覆碗，取離中虚，坎中满象。兑上缺，巽下斷。」（識典古籍）。⚠️ 待人工签字。"
+          }
+        ],
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    },
+    {
       "id": "tpl.b0.s4.wuxing-relation",
       "name": "五行生克关系与方向（全组合）",
       "skill_ids": [
@@ -1361,7 +3500,8 @@
           "sym.wuxing.水"
         ],
         "coverage": "all-ordered-pairs",
-        "include_identity_pairs": true
+        "include_identity_pairs": true,
+        "mode": "symbol-pairs"
       },
       "prompt_template": "给定两个五行符号「{a}」与「{b}」，判断二者之间的作用关系及其方向。",
       "choices_mode": "relation-labels",
@@ -1377,6 +3517,78 @@
         ],
         "source_strength": "中",
         "controversy_flag": false,
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      },
+      "answer_field": "relation"
+    },
+    {
+      "id": "tpl.liuyao.hexagram",
+      "name": "由六爻阴阳定本卦与世应（全组合）",
+      "skill_ids": [
+        "skill.liuyao.hexagram-by-yao"
+      ],
+      "kind": "关系判断",
+      "assessment_spec_id": "spec.liuyao.hexagram",
+      "rule_id": "rule.liuyao.hexagram-by-yao",
+      "parameter_space": {
+        "mode": "bit-combinations",
+        "bit_length": 6
+      },
+      "prompt_template": "下面六爻，自初爻起依次为：{yao}。该卦的世爻在第几爻？（1 = 初爻 … 6 = 上爻）",
+      "answer_field": "shi",
+      "choices_mode": "answer-field-distinct",
+      "difficulty": "进阶",
+      "requires_process": true,
+      "max_instances": 64,
+      "provenance": {
+        "sources": [
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          },
+          {
+            "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+            "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+            "confidence": "中–高",
+            "note": "见复核记录"
+          }
+        ],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "verifications": [
+          {
+            "claim": "京房八宫卦序：每宫八卦，次第为本宫、一世…五世、游魂、归魂（64 卦名称与所属宫）",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「京房八宫卦…乃序八宫」段；巽/離宫另见《周易本義》，坤/兌宫另见《易學義林》",
+            "excerpt": "京房八宫卦，焦延寿易林四千九十六卦，乃一卦变为六十四卦也。传诸京房，房为易传，乃序八宫。乾为天，天风姤、天山遁、天地否，风地观、山地剥、火地晋、火天大有。坎为水，水泽节，水雷屯，水火既济，泽火革，雷火丰，地火明夷，地水师。艮为山……震为雷……",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "证实",
+            "note": "乾/坎/艮/震 宫逐字一致；巽/離宫对《周易本義》，坤/兌宫对《易學義林》；震宫另由 ctext《卜筮全書》卷之一〈啟蒙節要〉独立印证。⚠️ 待人工签字。"
+          },
+          {
+            "claim": "八宫卦的世爻位置：本宫世六、一世至五世世初至五、游魂世四、归魂世三；应爻＝世爻隔三位",
+            "source": {
+              "ref": "《鄭氏易譜》[明]鄭旒 撰（識典古籍）",
+              "url": "https://www.shidianguji.com/mid-page/7530033223032930342",
+              "confidence": "中–高"
+            },
+            "locator": "《鄭氏易譜》「人易/天易/鬼易」段",
+            "excerpt": "变至四爻为四世，是曰人易；第五卦变至五爻为五世，亦曰天易。上爻置不变也。故第六卦变回四爻为四世，是为游魂；第七卦则将下三爻尽变还本宫贞体而为三世，是为归魂。游魂、归魂，名曰鬼易。",
+            "checked_by": "ai-candidate",
+            "checked_at": "2026-09-19T14:00:00.000Z",
+            "outcome": "部分证实",
+            "note": "**游魂=四世、归魂=三世** 有古典直接引文。其余：「本宫世六」「一世世初…五世世五」由「序八宫」生成方式自洽推出，本轮未取到逐字原文；**「应爻＝世爻隔三位」未取到古典直接引文** —— 签字前请补核，或标为本课程约定。⚠️ 待人工签字。"
+          }
+        ],
         "review_status": "draft",
         "authored_by": "human",
         "version": 1

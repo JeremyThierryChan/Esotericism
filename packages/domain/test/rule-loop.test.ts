@@ -74,11 +74,13 @@ function bundleWithTemplate(): ContentBundle {
       assessment_spec_id: 'spec.rule-judged',
       rule_id: 'rule.test.shengke',
       parameter_space: {
+        mode: 'symbol-pairs',
         domain_symbol_ids: ['sym.wuxing.木', 'sym.wuxing.火', 'sym.wuxing.土', 'sym.wuxing.金', 'sym.wuxing.水'],
         coverage: 'all-ordered-pairs',
         include_identity_pairs: true,
       },
       prompt_template: '「{a}」与「{b}」之间？',
+      answer_field: 'relation',
       choices_mode: 'relation-labels',
       difficulty: '入门',
       requires_process: true,
@@ -227,7 +229,9 @@ describe('CI 规则 R15–R17 · 模板', () => {
 
   it('参数空间越出规则适用符号 → 失败', () => {
     const b = bundleWithTemplate();
-    b.exercise_templates[0]!.parameter_space.domain_symbol_ids = ['sym.wuxing.木', 'sym.不存在'];
+    const ps = b.exercise_templates[0]!.parameter_space;
+    if (ps.mode !== 'symbol-pairs') throw new Error('夹具应为 symbol-pairs');
+    ps.domain_symbol_ids = ['sym.wuxing.木', 'sym.不存在'];
     expect(validateBundle(b).errors.map((e) => e.rule)).toContain('R16');
   });
 

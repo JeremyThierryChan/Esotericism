@@ -52,21 +52,30 @@ export interface DrillPlan {
   template: ExerciseTemplate;
   skillId: string;
   sampled: ExerciseInstance[];
+  /** 全部可用题组（供用户切换） */
+  all: ExerciseTemplate[];
+}
+
+/** 每题组的展示名 */
+export function templateLabel(t: ExerciseTemplate): string {
+  return t.name;
 }
 
 /**
  * 出题计划：**渲染与接线必须共用同一份**，否则首屏渲染的题与后续交互的题会不一致。
  * 抽样是确定性的（等距取样），因此不需要在两端传状态。
  */
-export function buildDrillPlan(bundle: ContentBundle): DrillPlan | null {
-  const template = bundle.exercise_templates[0];
-  if (!template) return null;
-  const all = generateExercises(bundle).instances;
+export function buildDrillPlan(bundle: ContentBundle, templateId?: string): DrillPlan | null {
+  const templates = bundle.exercise_templates;
+  if (templates.length === 0) return null;
+  const template = (templateId ? templates.find((t) => t.id === templateId) : undefined) ?? templates[0]!;
+  const all = generateExercises(bundle).instances.filter((i) => i.template_id === template.id);
   if (all.length === 0) return null;
+  // 每题组一次练最多 10 题；确定性等距取样（不用随机，保证可复现）
   const pickCount = Math.min(10, all.length);
   const step = Math.max(1, Math.floor(all.length / pickCount));
   const sampled = Array.from({ length: pickCount }, (_, i) => all[(i * step) % all.length]!).filter(Boolean);
-  return { template, skillId: template.skill_ids[0]!, sampled };
+  return { template, skillId: template.skill_ids[0]!, sampled, all: templates };
 }
 
 export function renderDrillSection(bundle: ContentBundle): string {
@@ -81,8 +90,22 @@ export function renderDrillSection(bundle: ContentBundle): string {
   const first = plan.sampled[0]!;
   const choices = first.answer_key.choices ?? [];
 
+  const options = plan.all
+    .map(
+      (t) =>
+        `<option value="${esc(t.id)}"${t.id === plan.template.id ? ' selected' : ''}>${esc(templateLabel(t))}</option>`,
+    )
+    .join('');
+
   return `
     <div class="card" id="drill">
+      <div class="row" style="margin:0 0 10px">
+        <label class="note" for="drill-template">题组</label>
+        <select id="drill-template">${options}</select>
+        <span class="note">共 ${plan.sampled.length} 题（该题组实际可生成 ${
+          plan.template.parameter_space.mode === 'bit-combinations' ? 2 ** plan.template.parameter_space.bit_length : '多'
+        } 题）</span>
+      </div>
       <div class="meta" id="drill-stats">
         <span class="tag">进度 1 / ${plan.sampled.length}</span>
         <span class="tag rule">规则判定</span>
@@ -111,7 +134,7 @@ export function renderDrillSection(bundle: ContentBundle): string {
       <details>
         <summary>这个练习区为什么不需要 AI</summary>
         <p class="note">
-          题目由内容库的<b>关系边</b>确定性生成（25 个有序对），答案由<b>规则引擎</b>从同一份真值表推出。
+          题目由内容库的数据确定性生成（关系边组合、或爻的位组合枚举），答案由<b>规则引擎</b>从同一份真值表推出。
           判分用的是同一个规则引擎，所以「对错」是可复现的，不存在模型幻觉。
         </p>
         <p class="note">
@@ -126,12 +149,12 @@ export function renderDrillSection(bundle: ContentBundle): string {
 const VERDICT_LABEL: Record<string, string> = { hit: '命中', miss: '未命中', violation: '违规', uncertain: '待判' };
 
 export function wireDrill(bundle: ContentBundle, container: HTMLElement): void {
-  const plan = buildDrillPlan(bundle);
-  if (!plan) return;
-  const template: ExerciseTemplate = plan.template;
-  const skillId = plan.skillId;
   const judge = createRuleJudge({ bundle });
-  const sampled = plan.sampled;
+  let plan = buildDrillPlan(bundle);
+  if (!plan) return;
+  let template: ExerciseTemplate = plan.template;
+  let skillId: string = plan.skillId;
+  let sampled: ExerciseInstance[] = plan.sampled;
 
   let state: DrillState = freshState(sampled);
 
@@ -325,6 +348,20 @@ export function wireDrill(bundle: ContentBundle, container: HTMLElement): void {
     renderStats();
     renderQuestion();
   }
+
+  // 切换题组：重建计划与状态（每题组的技能不同，掌握度也各自独立）
+  container.querySelector<HTMLSelectElement>('#drill-template')?.addEventListener('change', (e) => {
+    const next = buildDrillPlan(bundle, (e.target as HTMLSelectElement).value);
+    if (!next) return;
+    plan = next;
+    template = next.template;
+    skillId = next.skillId;
+    sampled = next.sampled;
+    state = freshState(sampled);
+    container.querySelector('#drill-choices')!.innerHTML = '';
+    renderStats();
+    renderQuestion();
+  });
 
   container.querySelector('[data-role="drill-submit"]')?.addEventListener('click', submit);
   container.querySelector('[data-role="drill-next"]')?.addEventListener('click', next);

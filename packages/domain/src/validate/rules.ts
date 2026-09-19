@@ -69,6 +69,7 @@ const RULE_BASIS = {
   R15: 'V0.2 §5.6 / M6（题目模板必须绑一个**带验证集**的规则，否则生成的题不可信）',
   R16: 'ADR-0021（模板参数空间必须落在规则的适用符号范围内）',
   R17: 'V0.1 §12（生成的题目必须与题型↔判分方式约束一致，且必须有答案键）',
+  R20: 'V0.2 §6 / ADR-0023（表驱动规则的数据表必须与列定义一致 —— 64 行表手抄错一行看不出来）',
   R19: 'V0.1 §14 流水线（**升级 reviewed 必须有人工复核记录**）；认识论原则 3（AI 产出不能独自撑起 reviewed）',
   R18: 'ADR-0021（**关系表不完整时禁止生成全组合题** —— 否则「查不到」会被当成「无作用关系」出成错误答案）',
 } as const;
@@ -576,6 +577,52 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     }
   }
 
+  // ---- R20: 规则数据表必须与列定义一致 ----
+  for (const rule of bundle.rules) {
+    const table = rule.table;
+    if (!table) continue;
+    const keys = table.columns.map((c) => c.key);
+    table.rows.forEach((row, idx) => {
+      const rowKeys = Object.keys(row);
+      const missing = keys.filter((k) => !(k in row));
+      const extra = rowKeys.filter((k) => !keys.includes(k));
+      if (missing.length > 0 || extra.length > 0) {
+        issues.push({
+          rule: 'R20',
+          severity: 'error',
+          entity_kind: 'rule',
+          entity_id: rule.id,
+          message: `表第 ${idx + 1} 行的列不匹配：缺 [${missing.join(',')}]，多 [${extra.join(',')}]`,
+          basis: RULE_BASIS.R20,
+        });
+        return;
+      }
+      for (const col of table.columns) {
+        const v = row[col.key];
+        if (col.type === 'number' && typeof v !== 'number') {
+          issues.push({
+            rule: 'R20',
+            severity: 'error',
+            entity_kind: 'rule',
+            entity_id: rule.id,
+            message: `表第 ${idx + 1} 行的 ${col.key} 应为 number，实际是 ${typeof v}（值 ${String(v)}）`,
+            basis: RULE_BASIS.R20,
+          });
+        }
+        if (col.type === 'string' && typeof v !== 'string') {
+          issues.push({
+            rule: 'R20',
+            severity: 'error',
+            entity_kind: 'rule',
+            entity_id: rule.id,
+            message: `表第 ${idx + 1} 行的 ${col.key} 应为 string，实际是 ${typeof v}`,
+            basis: RULE_BASIS.R20,
+          });
+        }
+      }
+    });
+  }
+
   // ---- R15–R18: 题目模板（ADR-0021） ----
   for (const tpl of bundle.exercise_templates) {
     // R15: 规则必须存在，且**必须带验证集**（M6）—— 否则规则的"正确答案"无从保证
@@ -600,8 +647,8 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
       });
     }
 
-    // R16: 参数空间必须落在规则声明的适用符号范围内
-    if (rule && rule.applies_to_symbol_ids.length > 0) {
+    // R16: 参数空间必须落在规则声明的适用符号范围内（仅 symbol-pairs 模式适用）
+    if (rule && rule.applies_to_symbol_ids.length > 0 && tpl.parameter_space.mode === 'symbol-pairs') {
       for (const sid of tpl.parameter_space.domain_symbol_ids) {
         if (!rule.applies_to_symbol_ids.includes(sid)) {
           issues.push({
@@ -666,8 +713,12 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
       }
     }
 
-    // R18: 全组合覆盖时，关系表必须**完整** —— 否则「查不到」会被当成「无作用关系」出成错误答案
-    if (tpl.parameter_space.coverage === 'all-ordered-pairs' && tpl.parameter_space.include_identity_pairs) {
+    // R18: 全组合覆盖时，关系表必须**完整**（仅 symbol-pairs 模式适用） —— 否则「查不到」会被当成「无作用关系」出成错误答案
+    if (
+      tpl.parameter_space.mode === 'symbol-pairs' &&
+      tpl.parameter_space.coverage === 'all-ordered-pairs' &&
+      tpl.parameter_space.include_identity_pairs
+    ) {
       const domain = new Set(tpl.parameter_space.domain_symbol_ids);
       // 按**无序对**判定：关系有方向，但一条边足以回答两个方向的提问
       const missing: string[] = [];

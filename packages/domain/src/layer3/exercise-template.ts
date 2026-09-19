@@ -52,24 +52,46 @@ export const exerciseTemplateSchema = entityBaseSchema.extend({
   rule_id: z.string().min(1),
   /**
    * 参数空间。生成器只在这个空间内出题。
-   * `domain_symbol_ids` 必须与规则的 `applies_to_symbol_ids` 兼容（CI 校验）。
+   *
+   * 两种模式对应**两类规则形状**（V0.2 §6 特意区分过）：
+   *   · `symbol-pairs`      —— 两个符号之间的关系题（如五行生克）
+   *   · `bit-combinations`  —— 位组合题（如三爻→八卦、六爻→本卦）
    */
-  parameter_space: z.object({
-    /** 参与组合的符号（有序对，含自身） */
-    domain_symbol_ids: z.array(z.string().min(1)).min(2),
-    /** 组合方式：全部有序对 / 仅生克对（排除自身） */
-    coverage: z.enum(['all-ordered-pairs', 'distinct-ordered-pairs']).default('all-ordered-pairs'),
-    /** 是否包含「无作用关系」的自身配对作为干扰项 */
-    include_identity_pairs: z.boolean().default(true),
-  }),
-  /** 题干模板。`{a}` `{b}` 会被参数替换 */
+  parameter_space: z.discriminatedUnion('mode', [
+    z.object({
+      mode: z.literal('symbol-pairs'),
+      /** 参与组合的符号（有序对，含自身） */
+      domain_symbol_ids: z.array(z.string().min(1)).min(2),
+      /** 组合方式：全部有序对 / 排除自身 */
+      coverage: z.enum(['all-ordered-pairs', 'distinct-ordered-pairs']).default('all-ordered-pairs'),
+      /** 是否包含「无作用关系」的自身配对作为干扰项 */
+      include_identity_pairs: z.boolean().default(true),
+    }),
+    z.object({
+      mode: z.literal('bit-combinations'),
+      /** 位长：3（三爻成八卦）或 6（六爻成卦） */
+      bit_length: z.union([z.literal(3), z.literal(6)]),
+    }),
+  ]),
+  /**
+   * 题干模板。占位符：
+   *   `{a}` `{b}`   —— symbol-pairs 模式的两个符号名
+   *   `{bits}`      —— bit-combinations 模式的位组合（如 111）
+   *   `{yao}`       —— bit-combinations 模式的爻象（如「阳 阳 阳（自初爻起）」）
+   */
   prompt_template: z.string().min(1),
   /**
-   * 选项生成方式：
-   *   · relation-labels —— 由规则的可能取值生成（生/克/无 的正反向组合）
-   *   · none —— 不给选项（自由作答，仍由规则判分）
+   * 本题的答案取规则输出的哪个字段。
+   * 客观选择题靠它生成选项；`expected` 里仍保留规则输出的**全部**字段供审计。
    */
-  choices_mode: z.enum(['relation-labels', 'none']).default('relation-labels'),
+  answer_field: z.string().min(1).optional(),
+  /**
+   * 选项生成方式：
+   *   · relation-labels      —— 生/克/无 的正反向组合（供关系题用）
+   *   · answer-field-distinct —— 取规则表里 `answer_field` 的**去重取值**（供表驱动题用）
+   *   · none                 —— 不给选项（自由作答，仍由规则判分）
+   */
+  choices_mode: z.enum(['relation-labels', 'answer-field-distinct', 'none']).default('relation-labels'),
   difficulty: z.enum(['入门', '进阶']).default('入门'),
   requires_process: z.boolean().default(true),
   /** 生成数量上限（防止组合爆炸进入前端） */

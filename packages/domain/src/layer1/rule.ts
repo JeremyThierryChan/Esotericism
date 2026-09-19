@@ -25,6 +25,31 @@ export const ruleTestSetSchema = z.object({
 });
 export type RuleTestSet = z.infer<typeof ruleTestSetSchema>;
 
+/**
+ * 表驱动规则的数据表。
+ *
+ * 依据 V0.2 §6：spike 时特意选了 L6.1「定世应」做第二条规则，因为它是**表驱动**的
+ * （八宫卦序查表），而纯算法规则验证不出「接口只支持算法、不支持查表」的偏差。
+ * 这里把那张表变成**有类型、可校验、带来源**的内容数据。
+ *
+ * 为什么表要有列定义：`z.unknown()` 存表等于放弃校验。列定义让 CI 能检查
+ * 「每行是否齐全、类型是否对得上」—— 卦序表有 64 行，手抄错一行的概率不低。
+ */
+export const ruleTableColumnSchema = z.object({
+  key: z.string().min(1),
+  label: z.string().min(1),
+  type: z.enum(['string', 'number']),
+});
+export type RuleTableColumn = z.infer<typeof ruleTableColumnSchema>;
+
+export const ruleTableSchema = z.object({
+  /** 这张表是干什么的 */
+  description: z.string().min(1),
+  columns: z.array(ruleTableColumnSchema).min(1),
+  rows: z.array(z.record(z.string(), z.union([z.string(), z.number()]))).min(1),
+});
+export type RuleTable = z.infer<typeof ruleTableSchema>;
+
 export const ruleSchema = entityBaseSchema.extend({
   /** 规则所属体系 */
   system_id: z.string().min(1),
@@ -40,5 +65,7 @@ export const ruleSchema = entityBaseSchema.extend({
   test_set_id: z.string().min(1).optional(),
   /** 规则的应用对象（符号 id 列表） */
   applies_to_symbol_ids: z.array(z.string().min(1)).default([]),
+  /** 表驱动规则的数据表。算法类规则留空 */
+  table: ruleTableSchema.optional(),
 });
 export type Rule = z.infer<typeof ruleSchema>;

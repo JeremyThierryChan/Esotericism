@@ -327,6 +327,20 @@ h3 {
   background: var(--choice-wrong-bg);
 }
 
+select {
+  background: var(--panel-2);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13.5px;
+}
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 textarea {
   width: 100%;
   min-height: 110px;

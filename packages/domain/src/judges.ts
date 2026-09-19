@@ -63,7 +63,7 @@ export function createRuleJudge(opts: RuleJudgeOptions) {
       if (!key) {
         throw new RuleInputError(`题目 ${exercise.id} 没有 answer_key，不能走规则判分`);
       }
-      const { procedure } = resolveRule(key.rule_id, ctx);
+      const { procedure, rule } = resolveRule(key.rule_id, ctx);
 
       // 作答有三种形状，都要支持：
       //   · { a, b }        —— 用户直接给了参数（自由作答）
@@ -83,7 +83,7 @@ export function createRuleJudge(opts: RuleJudgeOptions) {
       let actual: unknown;
       let error: string | undefined;
       try {
-        actual = procedure(ruleInput, ctx);
+        actual = procedure(ruleInput, ctx, rule);
       } catch (e) {
         error = e instanceof Error ? e.message : String(e);
       }

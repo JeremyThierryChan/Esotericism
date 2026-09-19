@@ -36,16 +36,101 @@ function fillTemplate(tpl: string, params: Record<string, string>): string {
   return tpl.replace(/\{(\w+)\}/g, (_, key: string) => params[key] ?? `{${key}}`);
 }
 
-/** 由规则的可能取值生成选项（生 / 克 / 无，含正反向） */
-function relationChoices(): string[] {
-  return ['a→b 相生', 'b→a 相生', 'a→b 相克', 'b→a 相克', '无作用关系'];
-}
-
 /** 把规则输出映射成人类可读的答案标签（用于客观题比对与选项展示） */
 export function relationAnswerLabel(result: { relation: string; direction: string }): string {
   if (result.relation === 'none' || result.direction === 'none') return '无作用关系';
   const arrow = result.direction === 'a→b' ? 'a→b' : 'b→a';
   return `${arrow} ${result.relation === '生' ? '相生' : '相克'}`;
+}
+
+/** 模板要求的答案字段 */
+function answerFieldOf(template: ExerciseTemplate): string {
+  const f = template.answer_field;
+  if (!f) {
+    throw new Error(
+      `模板 ${template.id} 需要 answer_field（bit-combinations 模式与 answer-field-distinct 选项都要靠它）`,
+    );
+  }
+  return f;
+}
+
+/**
+ * 取规则表里 `answer_field` 的去重取值作为选项（**排序保证确定性**）。
+ *
+ * 为什么从表里取而不是硬编码：选项必须与规则的可能输出**同源**，
+ * 否则会出「正确答案不在选项里」这种最难发现的坏题。
+ */
+function collectAnswerFieldChoices(
+  template: ExerciseTemplate,
+  bundle: ContentBundle,
+  field: string,
+): string[] | undefined {
+  if (template.choices_mode !== 'answer-field-distinct') return undefined;
+  const rule = bundle.rules.find((r) => r.id === template.rule_id);
+  if (!rule?.table) return undefined;
+  const values = new Set<string>();
+  for (const row of rule.table.rows) {
+    const v = row[field];
+    if (v !== undefined) values.add(String(v));
+  }
+  return [...values].sort();
+}
+
+/** 跑规则；失败则记原因并返回 undefined（**不静默出题**） */
+function runRule(
+  procedure: ReturnType<typeof resolveRule>['procedure'],
+  input: unknown,
+  ctx: RuleEngineContext,
+  ruleDecl: ReturnType<typeof resolveRule>['rule'],
+  skipped: string[],
+  ...labels: string[]
+): Record<string, unknown> | undefined {
+  try {
+    return procedure(input, ctx, ruleDecl) as Record<string, unknown>;
+  } catch (e) {
+    if (e instanceof RuleInputError) {
+      skipped.push(`规则拒绝输入 ${labels.join('/')}：${e.message}`);
+      return undefined;
+    }
+    throw e;
+  }
+}
+
+/** 组装一道生成题 */
+function makeInstance(
+  template: ExerciseTemplate,
+  input: unknown,
+  result: Record<string, unknown>,
+  label: string,
+  params: Record<string, string>,
+  choices?: string[],
+): ExerciseInstance {
+  const resolvedChoices =
+    choices ??
+    (template.choices_mode === 'relation-labels'
+      ? ['a→b 相生', 'b→a 相生', 'a→b 相克', 'b→a 相克', '无作用关系']
+      : template.choices_mode === 'none'
+        ? undefined
+        : undefined);
+
+  return {
+    id: `${template.id}#${Object.values(params).join('-')}`,
+    template_id: template.id,
+    kind: template.kind,
+    prompt: fillTemplate(template.prompt_template, params),
+    skill_ids: template.skill_ids,
+    assessment_spec_id: template.assessment_spec_id,
+    answer_key: {
+      rule_id: template.rule_id,
+      input,
+      // expected 保留规则输出的**全部**字段供审计，另存 label 作为选择题的判定值
+      expected: { ...result, label },
+      ...(resolvedChoices && resolvedChoices.length > 0 ? { choices: resolvedChoices } : {}),
+    },
+    requires_process: template.requires_process,
+    difficulty: template.difficulty,
+    params,
+  };
 }
 
 export function generateExercises(bundle: ContentBundle, options: GenerateOptions = {}): GenerateReport {
@@ -59,108 +144,111 @@ export function generateExercises(bundle: ContentBundle, options: GenerateOption
 
   for (const template of templates) {
     const skipped: string[] = [];
+    const limit = Math.min(options.limitPerTemplate ?? template.max_instances, template.max_instances);
+    const emitted = (): number => instances.filter((i) => i.template_id === template.id).length;
+    const bail = (reason: string): void => {
+      skipped.push(reason);
+      byTemplate.push({ template_id: template.id, count: 0, skipped });
+    };
 
     // ① 规则必须存在且能解析出实现（失败即跳过，不静默出题）
     let procedure: ReturnType<typeof resolveRule>['procedure'];
+    let ruleDecl: ReturnType<typeof resolveRule>['rule'];
     try {
-      procedure = resolveRule(template.rule_id, ctx).procedure;
+      const resolved = resolveRule(template.rule_id, ctx);
+      procedure = resolved.procedure;
+      ruleDecl = resolved.rule;
     } catch (e) {
-      skipped.push(`规则不可用：${(e as Error).message}`);
-      byTemplate.push({ template_id: template.id, count: 0, skipped });
+      bail(`规则不可用：${(e as Error).message}`);
       continue;
     }
 
-    // ② 组合参数（确定性顺序：按内容库中的符号顺序）
-    const domain = template.parameter_space.domain_symbol_ids;
-    const pairs: Array<[string, string]> = [];
-    for (const a of domain) {
-      for (const b of domain) {
-        const isIdentity = a === b;
-        if (isIdentity && !template.parameter_space.include_identity_pairs) continue;
-        if (isIdentity && template.parameter_space.coverage === 'distinct-ordered-pairs') continue;
-        pairs.push([a, b]);
-      }
-    }
+    const run = (input: unknown, ...labels: string[]): Record<string, unknown> | undefined =>
+      runRule(procedure, input, ctx, ruleDecl, skipped, ...labels);
 
-    // ②b 全组合覆盖时先检查关系表**完整性**。
-    // 不加这道闸门的话，「规则查不到关系」会被当成「无作用关系」出成题 —— 那是**错误答案**，
-    // 而且看起来完全正常（有题干、有选项、判分还能通过），属于最难发现的坏数据。
-    // CI 规则 R18 做同一件事，这里再挡一次是为了让运行时也不能绕过。
-    if (template.parameter_space.coverage === 'all-ordered-pairs' && template.parameter_space.include_identity_pairs) {
-      // 注意：关系**有方向**，但一条边足以回答两个方向的提问
-      // （问「火与木」时，规则会发现存在 木→火 的生边，答「b→a 相生」）。
-      // 所以完整性按**无序对**判定 —— 按有序对判定会误报一半的缺失。
-      const missing: string[] = [];
-      const seen = new Set<string>();
-      for (const a of domain) {
-        for (const b of domain) {
-          if (a === b) continue;
-          const key = [a, b].sort().join('|');
-          if (seen.has(key)) continue;
-          seen.add(key);
-          const has = bundle.relations.some(
-            (r) =>
-              (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
-          );
-          if (!has) missing.push(`${a}↔${b}`);
+    // ── 模式 A：两个符号之间的关系题（如五行生克） ──
+    if (template.parameter_space.mode === 'symbol-pairs') {
+      const ps = template.parameter_space;
+      const domain = ps.domain_symbol_ids;
+
+      // 全组合覆盖前先检查关系表**完整性**：否则「查不到关系」会被当成「无作用关系」
+      // 出成**错误答案**，而且看起来完全正常（有题干、有选项、判分还能通过）。
+      // CI 规则 R18 做同一件事；这里再挡一次，让运行时也不能绕过。
+      // 判定按**无序对**：关系有方向，但一条边足以回答两个方向的提问。
+      if (ps.coverage === 'all-ordered-pairs' && ps.include_identity_pairs) {
+        const missing: string[] = [];
+        const seen = new Set<string>();
+        for (const a of domain) {
+          for (const b of domain) {
+            if (a === b) continue;
+            const key = [a, b].sort().join('|');
+            if (seen.has(key)) continue;
+            seen.add(key);
+            const has = bundle.relations.some(
+              (r) =>
+                (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
+            );
+            if (!has) missing.push(`${a}↔${b}`);
+          }
         }
-      }
-      if (missing.length > 0) {
-        skipped.push(`关系表不完整（缺 ${missing.length} 条边），拒绝生成全组合题：${missing.slice(0, 4).join(', ')}…`);
-        byTemplate.push({ template_id: template.id, count: 0, skipped });
-        continue;
-      }
-    }
-
-    const limit = Math.min(options.limitPerTemplate ?? template.max_instances, template.max_instances);
-
-    for (const [aId, bId] of pairs) {
-      if (instances.filter((i) => i.template_id === template.id).length >= limit) break;
-
-      const symA = bundle.symbols.find((s) => s.id === aId);
-      const symB = bundle.symbols.find((s) => s.id === bId);
-      if (!symA || !symB) {
-        skipped.push(`符号不存在：${aId} / ${bId}`);
-        continue;
-      }
-
-      // ③ 用规则算出正确答案（与判分同一套真值表）
-      let result: unknown;
-      try {
-        result = procedure({ a: symA.canonical_name, b: symB.canonical_name }, ctx);
-      } catch (e) {
-        if (e instanceof RuleInputError) {
-          skipped.push(`规则拒绝输入 ${symA.canonical_name}/${symB.canonical_name}：${e.message}`);
+        if (missing.length > 0) {
+          bail(`关系表不完整（缺 ${missing.length} 条边），拒绝生成全组合题：${missing.slice(0, 4).join(', ')}…`);
           continue;
         }
-        throw e;
       }
 
-      const label = relationAnswerLabel(result as { relation: string; direction: string });
-      const params = { a: symA.canonical_name, b: symB.canonical_name };
+      for (const a of domain) {
+        for (const b of domain) {
+          if (emitted() >= limit) break;
+          const isIdentity = a === b;
+          if (isIdentity && !ps.include_identity_pairs) continue;
+          if (isIdentity && ps.coverage === 'distinct-ordered-pairs') continue;
 
-      instances.push({
-        id: `${template.id}#${symA.canonical_name}-${symB.canonical_name}`,
-        template_id: template.id,
-        kind: template.kind,
-        prompt: fillTemplate(template.prompt_template, params),
-        skill_ids: template.skill_ids,
-        assessment_spec_id: template.assessment_spec_id,
-        answer_key: {
-          rule_id: template.rule_id,
-          input: params,
-          // expected 同时给结构化字段与 label：结构化用于审计，label 用于客观题选项比对
-          expected: {
-            relation: (result as { relation: string }).relation,
-            direction: (result as { direction: string }).direction,
-            label,
-          },
-          ...(template.choices_mode === 'relation-labels' ? { choices: relationChoices() } : {}),
-        },
-        requires_process: template.requires_process,
-        difficulty: template.difficulty,
-        params,
-      });
+          const symA = bundle.symbols.find((s) => s.id === a);
+          const symB = bundle.symbols.find((s) => s.id === b);
+          if (!symA || !symB) {
+            skipped.push(`符号不存在：${a} / ${b}`);
+            continue;
+          }
+
+          const input = { a: symA.canonical_name, b: symB.canonical_name };
+          const result = run(input, symA.canonical_name, symB.canonical_name);
+          if (!result) continue;
+
+          instances.push(
+            makeInstance(
+              template,
+              input,
+              result,
+              relationAnswerLabel(result as { relation: string; direction: string }),
+              { a: symA.canonical_name, b: symB.canonical_name },
+            ),
+          );
+        }
+      }
+    } else {
+      // ── 模式 B：位组合题（三爻→八卦、六爻→本卦） ──
+      const n = template.parameter_space.bit_length;
+      const choices = collectAnswerFieldChoices(template, bundle, answerFieldOf(template));
+
+      for (let i = 0; i < 2 ** n; i++) {
+        if (emitted() >= limit) break;
+        // 自初爻起：第 k 位 = 第 k 爻（0 = 初爻）
+        const lines = Array.from({ length: n }, (_, k) => ((i >> k) & 1) as 0 | 1);
+        const bits = lines.join('');
+        const input = { lines };
+        const result = run(input, bits);
+        if (!result) continue;
+
+        const label = String(result[answerFieldOf(template)] ?? '');
+        instances.push(
+          makeInstance(template, input, result, label, {
+            bits,
+            // 不加「（自初爻起）」后缀：题干模板里有 —— 否则会出现「…自初爻起：阳 阴 阴（自初爻起）」
+            yao: lines.map((v) => (v === 1 ? '阳' : '阴')).join(' '),
+          }, choices),
+        );
+      }
     }
 
     byTemplate.push({
