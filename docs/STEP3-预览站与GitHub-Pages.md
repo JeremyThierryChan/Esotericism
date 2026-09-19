@@ -74,9 +74,40 @@ GitHub Pages 的实际情况：
 
 ---
 
-## 四、怎么部署（你需要做的两件事）
+## 四、部署现状与你还需做的两步
 
-我只准备好了一切，**没有也无法替你创建远端仓库**。
+**已完成（2026-09-19）：**
+
+| 项 | 结果 |
+|---|---|
+| 远端仓库 | `https://github.com/JeremyThierryChan/Esotericism`（**公开**，已按你的确认执行） |
+| 分支 | 本地 `master` → `main`，与远端默认分支一致 |
+| 推送 | 已推送，本地与远端 HEAD 一致（`21bac66`） |
+| 公开前页 | README 已加：未复核声明 / 这是什么 / 当前状态 / 快速上手 / 关键设计 / 许可 |
+| 敏感信息扫描 | 无密钥、无 `.env`、无 `.DS_Store` 被跟踪 |
+| 带真实 `BASE_PATH` 的构建 | ✅ `/Esotericism/` 子路径正确（大小写与仓库名一致） |
+
+### ⚠️ 还需你在 GitHub 上点两下（API 无法代替你授权）
+
+**① 开启 Actions** —— 推送后**没有任何 workflow 运行记录**，说明该仓库的 Actions 处于关闭状态。
+
+> Settings → Actions → General → Actions permissions → 选 **Allow all actions and reusable workflows** → Save
+
+**② 开启 Pages** —— 目前 `has_pages: false`。
+
+> Settings → Pages → Build and deployment → Source 选 **GitHub Actions**
+
+**③ 触发首次部署** —— 上述两项开好后：
+
+> Actions 标签页 → 左侧选「Deploy preview to GitHub Pages」→ **Run workflow**
+
+（或随便再 push 一次。workflow 已含 `workflow_dispatch`，无需空提交。）
+
+站点地址：**https://jeremythierrychan.github.io/Esotericism/**
+
+> workflow 里的 `configure-pages` 已设 `enablement: true`，会尝试自己打开 Pages。若权限不足而你已手工开好，它照样成功。
+
+### 原来的手动方式（备查）
 
 **① 建仓库并推送**
 
