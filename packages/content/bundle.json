@@ -399,6 +399,35 @@
     }
   ],
 
+  "exercise_templates": [
+    {
+      "id": "tpl.b0.s4.wuxing-relation",
+      "name": "五行生克关系与方向（全组合）",
+      "skill_ids": ["skill.b0.s4.wuxing-direction"],
+      "kind": "关系判断",
+      "assessment_spec_id": "spec.b0.s4",
+      "rule_id": "rule.wuxing.shengke",
+      "parameter_space": {
+        "domain_symbol_ids": ["sym.wuxing.木", "sym.wuxing.火", "sym.wuxing.土", "sym.wuxing.金", "sym.wuxing.水"],
+        "coverage": "all-ordered-pairs",
+        "include_identity_pairs": true
+      },
+      "prompt_template": "给定两个五行符号「{a}」与「{b}」，判断二者之间的作用关系及其方向。",
+      "choices_mode": "relation-labels",
+      "difficulty": "入门",
+      "requires_process": true,
+      "max_instances": 25,
+      "provenance": {
+        "sources": [{ "ref": "R1 Q2.2（相生、相克两条闭循环）", "confidence": "中–高" }],
+        "source_strength": "中",
+        "controversy_flag": false,
+        "review_status": "draft",
+        "authored_by": "human",
+        "version": 1
+      }
+    }
+  ],
+
   "content_texts": [
     { "id": "text.ex.b0.s4.wuxing-1", "owner_id": "ex.b0.s4.wuxing-1",
       "text": "给定两个五行符号「木」与「火」，判断二者之间的作用关系及其方向，并说出依据是哪一条闭循环。" },

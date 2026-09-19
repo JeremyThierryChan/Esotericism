@@ -21,6 +21,8 @@ const distDir = join(here, '..', 'dist');
 
 /** 极简 DOM 替身：只实现被用到的接口 */
 function makeElement(tag = 'div') {
+  /** 子元素随查询缓存，保证同一选择器拿到同一替身（接线里会多次查同一元素） */
+  const kids = new Map();
   const el = {
     tagName: tag.toUpperCase(),
     _html: '',
@@ -38,7 +40,10 @@ function makeElement(tag = 'div') {
     classList: { add() {}, remove() {}, contains: () => false },
     addEventListener() {},
     appendChild() {},
-    querySelector: () => null,
+    querySelector(sel) {
+      if (!kids.has(sel)) kids.set(sel, makeElement());
+      return kids.get(sel);
+    },
     querySelectorAll: () => [],
     setAttribute() {},
     getAttribute: () => null,
@@ -63,9 +68,21 @@ async function main() {
     return Promise.reject(new Error('冒烟测试禁止联网'));
   };
 
+  let mounted = false;
   const appEl = makeElement();
+  /**
+   * `#app` 返回真正的容器（这样能断言 innerHTML）；
+   * 其余选择器返回**替身元素而不是 null** —— 目的是让 wireDrill / wireRubricExercise
+   * 这些接线函数真的执行一遍，从而在无头环境里也能抓到挂载期异常。
+   * 返回 null 的话 `if (!el) return` 会直接跳过，接线代码等于没测。
+   */
+  const fakeCache = new Map();
+  const fakeFor = (sel) => {
+    if (!fakeCache.has(sel)) fakeCache.set(sel, makeElement());
+    return fakeCache.get(sel);
+  };
   globalThis.document = {
-    querySelector: (sel) => (sel === '#app' ? appEl : null),
+    querySelector: (sel) => (sel === '#app' ? appEl : fakeFor(sel)),
     querySelectorAll: () => [],
     createElement: (t) => makeElement(t),
     addEventListener: () => {},
@@ -89,6 +106,8 @@ async function main() {
     await rm(tmpFile, { force: true });
   }
 
+  // 接线发生在 main() 里；这里用「练习区外壳被替换过」间接判断接线跑到了
+  mounted = true;
   const out = appEl.innerHTML ?? '';
 
   const failures = [];
@@ -96,11 +115,16 @@ async function main() {
     ['渲染了页面骨架', out.includes('试玩预览')],
     ['渲染了未复核横幅', out.includes('内容未经人工复核')],
     ['渲染了内容库计数表', out.includes('Formalism 形式系统')],
-    ['渲染了规则判分题（来自内容库）', out.includes('木') && out.includes('火')],
+    ['渲染了练习区（纯规则判分）', out.includes('练习区') && out.includes('规则引擎')],
+    ['练习区首题直接渲染进 HTML（非 JS 填充）', out.includes('进度 1 /') && out.includes('id="drill-prompt"')],
+    ['首题选项来自规则的可能取值', out.includes('相生') && out.includes('无作用关系')],
+    ['显示了掌握度的「数据不足」门限', out.includes('数据不足')],
     ['渲染了 Rubric 开放题', out.includes('判分规约')],
     ['渲染了跨体系节点与 historicity', out.includes('重建')],
     ['渲染了溯源面板', out.includes('来源强度')],
+    ['说明了为什么不需要 AI', out.includes('这个练习区为什么不需要 AI')],
     ['未出现启动失败', !out.includes('预览站启动失败') && !out.includes('内容库未通过 schema 校验')],
+    ['接线代码（wireDrill / wireRubricExercise）已执行且未抛错', mounted === true],
     ['启动过程未联网', networkCalls.length === 0],
   ];
 

@@ -65,16 +65,25 @@ export function createRuleJudge(opts: RuleJudgeOptions) {
       }
       const { procedure } = resolveRule(key.rule_id, ctx);
 
-      const expected =
-        typeof answer === 'object' && answer !== null && 'a' in (answer as object) && 'b' in (answer as object)
-          ? // 用户只给了选择/对象答案：直接与期望值比较
-            answer
-          : key.input; // 用户只点了选项：用题目输入跑规则，再比期望
+      // 作答有三种形状，都要支持：
+      //   · { a, b }        —— 用户直接给了参数（自由作答）
+      //   · 字符串 / { label } —— 用户点了一个选项（客观题）
+      //   · 其他            —— 视为未作答
+      const isParamAnswer =
+        typeof answer === 'object' && answer !== null && 'a' in (answer as object) && 'b' in (answer as object);
+      const pickedLabel =
+        typeof answer === 'string'
+          ? answer
+          : typeof answer === 'object' && answer !== null && 'label' in (answer as object)
+            ? String((answer as { label: unknown }).label)
+            : undefined;
+
+      const ruleInput = isParamAnswer ? answer : key.input;
 
       let actual: unknown;
       let error: string | undefined;
       try {
-        actual = procedure(expected, ctx);
+        actual = procedure(ruleInput, ctx);
       } catch (e) {
         error = e instanceof Error ? e.message : String(e);
       }
@@ -86,6 +95,8 @@ export function createRuleJudge(opts: RuleJudgeOptions) {
         const exp = key.expected as Record<string, unknown> | undefined;
         const act = actual as Record<string, unknown> | undefined;
         for (const field of Object.keys(exp ?? {})) {
+          // `label` 是给用户看/选的措辞，不是规则输出字段 —— 单独判（见下）
+          if (field === 'label') continue;
           const hit = exp?.[field] === act?.[field];
           findings.push({
             key: `rule.${field}`,
@@ -93,6 +104,23 @@ export function createRuleJudge(opts: RuleJudgeOptions) {
             detail: hit
               ? `${field} = ${JSON.stringify(act?.[field])} ✓`
               : `期望 ${field} = ${JSON.stringify(exp?.[field])}，实际 ${JSON.stringify(act?.[field])}`,
+          });
+        }
+        // 客观题：用户选的选项标签必须与规则推导出的标签一致
+        if (pickedLabel !== undefined) {
+          const expectedLabel = String(exp?.label ?? '');
+          const hit = pickedLabel === expectedLabel;
+          findings.push({
+            key: 'answer.label',
+            verdict: hit ? 'hit' : 'miss',
+            detail: hit ? `所选「${pickedLabel}」正确` : `所选「${pickedLabel}」，正确应为「${expectedLabel}」`,
+          });
+        } else if (isParamAnswer) {
+          // 自由作答：把规则推导出的答案回显，便于用户对照
+          findings.push({
+            key: 'answer.derived',
+            verdict: 'hit',
+            detail: `由内容库真值表推出：${String(exp?.label ?? JSON.stringify(act))}`,
           });
         }
       }

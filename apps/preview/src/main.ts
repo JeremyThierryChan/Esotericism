@@ -14,7 +14,6 @@
  */
 import {
   contentBundleSchema,
-  createRuleJudge,
   createSkeletonRubricJudge,
   validateBundle,
   type ContentBundle,
@@ -24,6 +23,7 @@ import {
 // 直接 import 内容库 JSON —— 浏览器里没有 node:fs，所以不能用 @dlg/content 的 Node 版 loader。
 // 走的是同一个 schema，因此与 CI 校验完全一致。
 import rawBundle from '@dlg/content/bundle.json';
+import { renderDrillSection, wireDrill } from './drill.js';
 
 const appEl = document.querySelector<HTMLDivElement>('#app');
 if (!appEl) throw new Error('缺少 #app 容器');
@@ -78,7 +78,6 @@ function main(): void {
 
   const bundle: ContentBundle = parsed.data;
   const report = validateBundle(bundle);
-  const ruleJudge = createRuleJudge({ bundle });
   const skeletonJudge = createSkeletonRubricJudge({ bundle });
 
   app.innerHTML = `
@@ -112,8 +111,8 @@ function main(): void {
         <p class="note">数据来源：<code>packages/content/bundle.json</code>（内容库唯一事实来源，改动即触发 CI 校验）</p>
       </div>
 
-      <h2><span class="idx">02</span>做一道题（规则判分 · 真跑）</h2>
-      ${renderRuleExercise(bundle, ruleJudge)}
+      <h2><span class="idx">02</span>练习区（纯规则判分 + 纯规则积分 · 真跑）</h2>
+      ${renderDrillSection(bundle)}
 
       <h2><span class="idx">03</span>做一道开放题（AI 判分 · 静态站受限）</h2>
       ${renderRubricExercise(bundle, skeletonJudge)}
@@ -131,101 +130,9 @@ function main(): void {
     </div>
   `;
 
-  wireRuleExercise(bundle, ruleJudge);
+  const drillEl = document.querySelector<HTMLElement>('#drill');
+  if (drillEl) wireDrill(bundle, drillEl);
   wireRubricExercise(bundle, skeletonJudge);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 02 · 规则判分题
-// ─────────────────────────────────────────────────────────────────────────────
-
-function renderRuleExercise(bundle: ContentBundle, _judge: unknown): string {
-  const ex = bundle.exercises.find((e) => e.kind === '关系判断');
-  if (!ex) return '<div class="card"><p class="note">内容库里没有规则判分题。</p></div>';
-
-  const choices = ex.answer_key?.choices ?? [];
-  const skill = bundle.skills.find((s) => ex.skill_ids.includes(s.id));
-
-  return `
-    <div class="card" data-ex="${esc(ex.id)}">
-      <div class="meta">
-        <span class="tag rule">规则判定</span>
-        <span class="tag">题型 ${esc(ex.kind)}</span>
-        <span class="tag">${esc(ex.difficulty)}</span>
-        <span class="tag" title="judging_mode">${esc(skill?.judging_mode ?? '')}</span>
-      </div>
-      <div class="prompt">${esc(ex.prompt)}</div>
-      <div class="choices" data-role="choices">
-        ${choices
-          .map(
-            (c, i) => `<label class="choice">
-              <input type="radio" name="rule-answer" value="${esc(c)}" ${i === 0 ? '' : ''} />
-              <span>${esc(c)}</span>
-            </label>`,
-          )
-          .join('')}
-      </div>
-      <div class="row">
-        <button data-role="submit">提交</button>
-        <button class="ghost" data-role="reset">重做</button>
-      </div>
-      <div data-role="result"></div>
-      <details>
-        <summary>这道题为什么能自动判分</summary>
-        <p class="note">
-          它的 <code>judging_mode</code> 是「规则判定」—— 有唯一正确答案的领域，<b>AI 不得介入</b>（V0.1 §12）。
-          判分走规则引擎，真值表来自内容库的 <code>related_by</code> 关系边，代码里没有硬编码任何术数理论。
-        </p>
-      </details>
-    </div>`;
-}
-
-function wireRuleExercise(bundle: ContentBundle, judge: ReturnType<typeof createRuleJudge>): void {
-  const card = document.querySelector<HTMLElement>('[data-ex]');
-  if (!card) return;
-  const exId = card.dataset.ex as string;
-  const ex = bundle.exercises.find((e) => e.id === exId) as Exercise;
-  const resultEl = card.querySelector<HTMLElement>('[data-role="result"]');
-  if (!resultEl) return;
-
-  const submit = (): void => {
-    const picked = card.querySelector<HTMLInputElement>('input[name="rule-answer"]:checked');
-    if (!picked) {
-      resultEl.innerHTML = `<p class="note warn">请先选一个答案。</p>`;
-      return;
-    }
-    const record = judge.judge(ex, { answer: picked.value });
-
-    // 把选项对错可视化
-    const expectedLabel = String((ex.answer_key?.expected as { relation?: string })?.relation ?? '');
-    card.querySelectorAll<HTMLElement>('.choice').forEach((label) => {
-      label.classList.remove('correct', 'wrong');
-      const text = label.querySelector('span')?.textContent ?? '';
-      const isRight = text.startsWith(expectedLabel) && text.includes('→');
-      if (isRight) label.classList.add('correct');
-      else if (text === picked.value) label.classList.add('wrong');
-    });
-
-    resultEl.innerHTML = `
-      <div class="verdict ${record.passed ? 'pass' : 'fail'}">
-        ${record.passed ? '✅ 回答正确' : '❌ 回答不正确'}
-      </div>
-      <div class="meta">
-        <span class="tag rule">${esc(decidedByLabel[record.decided_by] ?? record.decided_by)}</span>
-        <span class="tag" title="三道闸门之②">写回知识库：${record.audit.wrote_to_library ? '是' : '否'}</span>
-        <span class="tag" title="判分依据">${esc(record.audit.knowledge_scope_ids.join(', '))}</span>
-      </div>
-      ${renderFindings(record.findings)}
-      <p class="note">判分依据是内容库里的关系边，不是模型的记忆 —— 这就是「有唯一答案处不用 AI」的意思。</p>
-    `;
-  };
-
-  card.querySelector('[data-role="submit"]')?.addEventListener('click', submit);
-  card.querySelector('[data-role="reset"]')?.addEventListener('click', () => {
-    card.querySelectorAll<HTMLInputElement>('input[name="rule-answer"]').forEach((i) => (i.checked = false));
-    card.querySelectorAll<HTMLElement>('.choice').forEach((l) => l.classList.remove('correct', 'wrong'));
-    resultEl.innerHTML = '';
-  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

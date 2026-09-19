@@ -32,6 +32,7 @@ export * from './layer2/skill.js';
 export * from './layer3/rubric.js';
 export * from './layer3/assessment.js';
 export * from './layer3/exercise.js';
+export * from './layer3/exercise-template.js';
 
 // ---- 派生视图（机制 A） ----
 export * from './derive.js';
@@ -44,8 +45,13 @@ export * from './bundle.js';
 export * from './validate/rules.js';
 export * from './validate/forbidden.js';
 
-// ---- Layer 4：用户状态层（Attempt / Evidence / JudgeAudit） ----
+// ---- Layer 4：用户状态层（Attempt / Evidence / JudgeAudit / Mastery / 积分） ----
 export * from './layer4/user-state.js';
+export * from './layer4/mastery.js';
+export * from './layer4/scoring.js';
+
+// ---- 确定性题目生成（规则密集型内容经济学的落地） ----
+export * from './generate/drill.js';
 
 // ---- 规则引擎（数据驱动） ----
 export * from './rules/registry.js';

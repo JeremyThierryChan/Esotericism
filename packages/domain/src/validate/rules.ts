@@ -23,6 +23,7 @@ import {
 } from '../layer2/skill.js';
 import { specsProvidingRubric, specsProvidingRules } from '../layer3/assessment.js';
 import { KIND_ALLOWED_JUDGING_MODES } from '../layer3/exercise.js';
+import { generateExercises } from '../generate/drill.js';
 import { scanForbiddenPhrases } from './forbidden.js';
 
 export type IssueSeverity = 'error' | 'warning';
@@ -65,6 +66,10 @@ const RULE_BASIS = {
   R12: 'ADR-0016（题型 ↔ 判分方式必须一致）；V0.1 §10.2',
   R13: 'ADR-0016（含规则判分的题必须有答案键）；V0.1 §12',
   R14: 'V0.1 §8.2（跨体系关卡四段式，缺一不可）',
+  R15: 'V0.2 §5.6 / M6（题目模板必须绑一个**带验证集**的规则，否则生成的题不可信）',
+  R16: 'ADR-0021（模板参数空间必须落在规则的适用符号范围内）',
+  R17: 'V0.1 §12（生成的题目必须与题型↔判分方式约束一致，且必须有答案键）',
+  R18: 'ADR-0021（**关系表不完整时禁止生成全组合题** —— 否则「查不到」会被当成「无作用关系」出成错误答案）',
 } as const;
 
 function hasSources(p: { sources: readonly unknown[] }): boolean {
@@ -132,6 +137,7 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     rubrics: bundle.rubrics.length,
     assessment_specs: bundle.assessment_specs.length,
     exercises: bundle.exercises.length,
+    exercise_templates: bundle.exercise_templates.length,
     content_texts: bundle.content_texts.length,
   };
 
@@ -539,6 +545,131 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
             basis: RULE_BASIS.R12,
           });
         }
+      }
+    }
+  }
+
+  // ---- R15–R18: 题目模板（ADR-0021） ----
+  for (const tpl of bundle.exercise_templates) {
+    // R15: 规则必须存在，且**必须带验证集**（M6）—— 否则规则的"正确答案"无从保证
+    const rule = bundle.rules.find((r) => r.id === tpl.rule_id);
+    if (!rule) {
+      issues.push({
+        rule: 'R15',
+        severity: 'error',
+        entity_kind: 'exercise_template',
+        entity_id: tpl.id,
+        message: `rule_id = ${tpl.rule_id} 不存在于 rules[]`,
+        basis: RULE_BASIS.R15,
+      });
+    } else if (!bundle.rule_test_sets.some((ts) => ts.rule_id === rule.id)) {
+      issues.push({
+        rule: 'R15',
+        severity: 'error',
+        entity_kind: 'exercise_template',
+        entity_id: tpl.id,
+        message: `规则 ${rule.id} 没有 RuleTestSet —— 规则引擎正确性无从保证，生成的题目也就不可信（M6）`,
+        basis: RULE_BASIS.R15,
+      });
+    }
+
+    // R16: 参数空间必须落在规则声明的适用符号范围内
+    if (rule && rule.applies_to_symbol_ids.length > 0) {
+      for (const sid of tpl.parameter_space.domain_symbol_ids) {
+        if (!rule.applies_to_symbol_ids.includes(sid)) {
+          issues.push({
+            rule: 'R16',
+            severity: 'error',
+            entity_kind: 'exercise_template',
+            entity_id: tpl.id,
+            message: `参数空间的符号 ${sid} 不在规则 ${rule.id} 的 applies_to_symbol_ids 内`,
+            basis: RULE_BASIS.R16,
+          });
+        }
+        if (!bundle.symbols.some((s) => s.id === sid)) {
+          issues.push({
+            rule: 'R16',
+            severity: 'error',
+            entity_kind: 'exercise_template',
+            entity_id: tpl.id,
+            message: `参数空间的符号 ${sid} 不存在于 symbols[]`,
+            basis: RULE_BASIS.R16,
+          });
+        }
+      }
+    }
+
+    // R17: 生成的实例必须与题型↔判分方式约束一致，且必须有答案键
+    const gen = generateExercises(bundle, { templateId: tpl.id });
+    const report = gen.byTemplate[0];
+    if (!report || report.count === 0) {
+      issues.push({
+        rule: 'R17',
+        severity: 'error',
+        entity_kind: 'exercise_template',
+        entity_id: tpl.id,
+        message: `模板生成不出任何题目（死模板）。原因：${report?.skipped.join('；') || '未知'}`,
+        basis: RULE_BASIS.R17,
+      });
+    }
+    for (const inst of gen.instances) {
+      if (!inst.answer_key) {
+        issues.push({
+          rule: 'R17',
+          severity: 'error',
+          entity_kind: 'exercise_template',
+          entity_id: tpl.id,
+          message: `生成的题目 ${inst.id} 没有答案键 —— 规则引擎无从判分`,
+          basis: RULE_BASIS.R17,
+        });
+      }
+      const allowed = KIND_ALLOWED_JUDGING_MODES[inst.kind];
+      for (const sid of inst.skill_ids) {
+        const sk = bundle.skills.find((x) => x.id === sid);
+        if (sk && !allowed.includes(sk.judging_mode)) {
+          issues.push({
+            rule: 'R17',
+            severity: 'error',
+            entity_kind: 'exercise_template',
+            entity_id: tpl.id,
+            message: `生成题 ${inst.id} 的题型「${inst.kind}」不允许 judging_mode = ${sk.judging_mode}`,
+            basis: RULE_BASIS.R17,
+          });
+        }
+      }
+    }
+
+    // R18: 全组合覆盖时，关系表必须**完整** —— 否则「查不到」会被当成「无作用关系」出成错误答案
+    if (tpl.parameter_space.coverage === 'all-ordered-pairs' && tpl.parameter_space.include_identity_pairs) {
+      const domain = new Set(tpl.parameter_space.domain_symbol_ids);
+      // 按**无序对**判定：关系有方向，但一条边足以回答两个方向的提问
+      const missing: string[] = [];
+      const seenPairs = new Set<string>();
+      for (const a of domain) {
+        for (const b of domain) {
+          if (a === b) continue;
+          const key = [a, b].sort().join('|');
+          if (seenPairs.has(key)) continue;
+          seenPairs.add(key);
+          const has = bundle.relations.some(
+            (r) =>
+              (r.from_symbol_id === a && r.to_symbol_id === b) || (r.from_symbol_id === b && r.to_symbol_id === a),
+          );
+          if (!has) missing.push(`${a}↔${b}`);
+        }
+      }
+      if (missing.length > 0) {
+        issues.push({
+          rule: 'R18',
+          severity: 'error',
+          entity_kind: 'exercise_template',
+          entity_id: tpl.id,
+          message:
+            `关系表在 ${domain.size} 个符号上不完整（缺 ${missing.length} 条：${missing.slice(0, 6).join(', ')}${missing.length > 6 ? ' …' : ''}）。` +
+            `此时全组合生成会把「查不到关系」当成「无作用关系」出成题 —— 那是错误答案。` +
+            `请补全关系边，或把 coverage 改为 distinct-ordered-pairs 并显式排除缺数据的对。`,
+          basis: RULE_BASIS.R18,
+        });
       }
     }
   }
