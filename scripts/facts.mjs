@@ -36,7 +36,9 @@ row('远端', sh('git remote get-url origin 2>/dev/null') || '(无)');
 
 line();
 line('════════ 代码规模 ════════');
-for (const pkg of ['packages/domain', 'packages/content', 'apps/preview']) {
+// ⚠️ 新增包/应用时必须补进这张清单 —— 否则这里的「权威数字」会静默漏掉一整个包，
+// 而文档恰恰规定「数字以本输出为准」。apps/studio 是 ADR-0026 加的。
+for (const pkg of ['packages/domain', 'packages/content', 'apps/preview', 'apps/studio']) {
   const n = sh(`find ${pkg}/src -type f 2>/dev/null | wc -l`).trim();
   const l = sh(`find ${pkg}/src -type f 2>/dev/null -exec cat {} + 2>/dev/null | wc -l`).trim();
   row(pkg, `${n} 文件 / ${l} 行`);
@@ -45,7 +47,7 @@ for (const pkg of ['packages/domain', 'packages/content', 'apps/preview']) {
 line();
 line('════════ 测试（真实运行）════════');
 let total = 0;
-for (const pkg of ['packages/domain', 'packages/content']) {
+for (const pkg of ['packages/domain', 'packages/content', 'apps/studio']) {
   const out = sh(`pnpm --filter @dlg/${pkg.split('/')[1]} test 2>&1 | tail -40`);
   const m = /Tests\s+(\d+) passed/.exec(out);
   const n = m ? Number(m[1]) : 0;
@@ -56,7 +58,8 @@ for (const pkg of ['packages/domain', 'packages/content']) {
 row('合计', `${total} 条`);
 // ⚠️ grep 无匹配时退出码为 1，会让 execSync 抛错 —— 必须兜住
 const tcFail = sh('pnpm -r typecheck 2>&1 | grep -c Failed || true').trim();
-row('typecheck', tcFail === '0' ? '✓ 三包干净' : `⚠️ ${tcFail} 处失败`);
+const pkgCount = sh('pnpm -r list --depth -1 2>/dev/null | grep -c "/" || true').trim();
+row('typecheck', tcFail === '0' ? `✓ ${Number(pkgCount) || 4} 个包干净` : `⚠️ ${tcFail} 处失败`);
 
 line();
 line('════════ CI 校验规则 ════════');
@@ -87,6 +90,12 @@ row('人工签字过的条目', human.length === 0 ? '0 ⚠️（内容仍是 dr
 line();
 line('── 可生成题（内容量）──');
 line(sh('pnpm --filter @dlg/content count 2>&1 | tail -20'));
+
+// ── 内容流水线工具的视角（ADR-0026）：直接回答「签字还差什么」 ──
+// 这一段是刻意放进来替代「再写一份人工清单」的：清单会与代码漂移，而这里跑的是真校验器。
+line();
+line('── 签字就绪度（内容流水线工具 check）──');
+line(sh('pnpm --filter @dlg/studio exec tsx src/cli.ts check 2>&1 | tail -30'));
 
 line();
 line('════════ 文档 ════════');

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- 本机工具，绝不能被搜索引擎收录 -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>内容流水线工具 · 术数学习游戏</title>
+    <link rel="stylesheet" href="/studio.css" />
+  </head>
+  <body>
+    <div class="banner">
+      <strong>本机工具</strong> —— 它会直接改写
+      <code id="bundlePath">…</code>
+      这是内容的唯一事实来源。改动前请看 git diff。
+    </div>
+
+    <header>
+      <div class="titleRow">
+        <h1>内容流水线工具</h1>
+        <button id="undoBtn" class="btn ghost" disabled title="撤销本进程上一次写入（git 才是长期历史）">撤回上一次写入</button>
+      </div>
+      <p class="sub">
+        录入 · 审核（人工签字）· 试玩预览 —— 缺口清单 <strong>C2-2</strong>，ADR-0008 指定的「第一个要写的 UI」。
+      </p>
+      <div id="statBar" class="statBar"></div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab" data-tab="overview" role="tab">总览</button>
+      <button class="tab" data-tab="review" role="tab">审核工作台</button>
+      <button class="tab" data-tab="entry" role="tab">录入</button>
+      <button class="tab" data-tab="preview" role="tab">试玩预览</button>
+      <button class="tab" data-tab="validate" role="tab">CI 校验</button>
+    </nav>
+
+    <main>
+      <section id="panel-overview" class="panel"></section>
+
+      <section id="panel-review" class="panel split">
+        <div class="listCol">
+          <div class="filters">
+            <label>
+              集合
+              <select id="filterKind"><option value="">全部</option></select>
+            </label>
+            <label>
+              状态
+              <select id="filterStatus">
+                <option value="">全部</option>
+                <option value="draft">draft</option>
+                <option value="reviewed">reviewed</option>
+                <option value="deprecated">deprecated</option>
+              </select>
+            </label>
+            <label>
+              可签字性
+              <select id="filterReady">
+                <option value="">全部</option>
+                <option value="ready">现在就能签字</option>
+                <option value="blocked">有阻塞</option>
+                <option value="signed">已有人工签字记录</option>
+              </select>
+            </label>
+            <input id="filterText" type="search" placeholder="搜索 id / 名称" />
+          </div>
+          <div id="entryList" class="entryList"></div>
+        </div>
+        <div id="entryDetail" class="detailCol"></div>
+      </section>
+
+      <section id="panel-entry" class="panel"></section>
+      <section id="panel-preview" class="panel"></section>
+      <section id="panel-validate" class="panel"></section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+    <script type="module" src="/studio.js"></script>
+  </body>
+</html>

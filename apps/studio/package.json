@@ -1,0 +1,24 @@
+{
+  "name": "@dlg/studio",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "内容流水线工具（缺口清单 C2-2、ADR-0008 指定的「第一个要写的 UI」）：录入 · 审核（人工签字）· 试玩预览。**仅本机使用**。",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc --noEmit && node scripts/smoke.mjs",
+    "serve": "tsx src/cli.ts serve",
+    "check": "tsx src/cli.ts check"
+  },
+  "dependencies": {
+    "@dlg/content": "workspace:*",
+    "@dlg/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
