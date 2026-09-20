@@ -12,6 +12,20 @@
  *     R1b `authored_by === 'ai-candidate'` 且 `review_status === 'reviewed'` → **error**（认识论原则 3）
  *     R1c `draft` 且 `sources` 为空                              → **warning**（可存在，但不可升级）
  *   这与流水线的实际意图一致，但**改动了 V0.2.1 的字面表述**，已记入 step 1 报告待确认。
+ *
+ * R1/R19 的**覆盖范围**（这一栏必须显式维护，否则会静默漏检）：
+ *   带 `provenance` 的实体一共 14 组 —— formalism · attribute_space · symbol · system ·
+ *   school · concept · schema · rule · skill · rubric · assessment_spec · relation ·
+ *   **exercise** · **exercise_template**（后两组是 ADR-0022 落地时漏掉的，已补，见下方 layer0Groups）。
+ *   另有 5 组**不带 provenance**，因此本规则不适用：has_attributes · symbol_usages ·
+ *   rule_test_sets · skill_edges · content_texts。
+ *   ⚠️ 别把「schema 里没有 provenance」读成「它们不是知识论断」—— 那是两回事，
+ *   而 `symbol_usages` 这一组正被 V0.5 质疑（迁移预测题的题池直接由它决定，
+ *   等于这些条目会成为考点却不需要任何来源）。这是**待拍定项**，见
+ *   `docs/work/ADR-0025-R1R19覆盖范围修正.md` §四，不要当成已定案的设计依据。
+ *   ⚠️ 例外：`transfer_edges` 自带 `sources` + `source_strength` 而**没有 `provenance`** ——
+ *   它因此**没有 `review_status`、也没有 `verifications`**，既不能被标记 `reviewed`、
+ *   也无法留下人工签字。它只受下面单独的 R1a（sources 非空）约束。这是已知缺口（见 T8）。
  */
 import type { ContentBundle } from '../bundle.js';
 import { isSameFormalismEdge } from '../derive.js';
@@ -193,6 +207,14 @@ export function validateBundle(bundle: ContentBundle): ValidationReport {
     ['skill', bundle.skills],
     ['rubric', bundle.rubrics],
     ['assessment_spec', bundle.assessment_specs],
+    // ⚠️ 漏过一轮的两组：`Exercise` 与 `ExerciseTemplate`（ADR-0022 的检查漏项）。
+    // 两者 schema 里**都带 provenance**（`entityBaseSchema.extend`），数据里也都有，
+    // 但此前没进这张表 → R1a/R1b/R1c/R19 对它们**完全不生效**。
+    // 后果不是「少一个警告」：题目可以被直接标成 `reviewed` 而**不需要任何人工复核记录**，
+    // 而题目正是玩家实际作答、最该有人签字的对象 —— R19 的意义恰在这里泄漏。
+    // 这与 step 2 缺 `Exercise`、step 3 缺 `Attempt` 是同一种病：声明了但没接上。
+    ['exercise', bundle.exercises],
+    ['exercise_template', bundle.exercise_templates],
     // 关系边没有 `id` 字段（它们由两端标识），所以要合成一个可读标签 ——
     // 否则 R1c 的报错会显示 `relation:undefined`，等于没告诉人哪一条有问题。
     [

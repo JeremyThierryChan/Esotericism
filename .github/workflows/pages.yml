@@ -1,8 +1,11 @@
 name: Deploy preview to GitHub Pages
 
-# ⚠️ 部署前请读 docs/STEP3-GITHUB-PAGES.md 的合规声明：
+# ⚠️ 部署前请读 docs/work/ADR-0018-0019-预览站与部署.md 的合规声明
+#   （这里原来写的是 docs/STEP3-GITHUB-PAGES.md —— 那个文件从来不存在，是坏引用）：
 #   本站内容是 draft 未经人工复核；仓库可见性会决定这些内容是否等于"公开上线"。
 #   本 workflow 只会构建并发布 apps/preview 的静态产物，不接触任何密钥。
+#
+# 分工：本文件只管**发布**，触发路径有过滤；全量测试门在 ci.yml（任何变更都跑）。
 
 on:
   push:

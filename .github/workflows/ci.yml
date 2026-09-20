@@ -1,0 +1,78 @@
+name: CI
+
+# 为什么需要这个 workflow（缺口清单 C2-6）：
+#   pages.yml 只在 `apps/preview/**`、`packages/**`、它自己变更时触发 ——
+#   **纯文档提交（docs/**、README、workflow 之外的改动）根本不跑测试**。
+#   而这个项目最重的改动恰恰常在文档里（ADR、设计文档、复核记录），
+#   一旦文档与代码/内容漂移，没有任何自动机制会告诉你。
+#
+# 本 workflow 与 pages.yml 的分工：
+#   · ci.yml     —— **门**：任何 push / PR 都跑，全量 typecheck + test + validate + 预览构建冒烟
+#   · pages.yml  —— **发布**：只在可能影响预览站的路径上跑，通过同样的门后部署
+#
+# 因此这里**不写 paths 过滤** —— 过滤掉文档就等于过滤掉这个 workflow 存在的理由。
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+# 只读：本 workflow 不部署、不写任何东西
+permissions:
+  contents: read
+
+concurrency:
+  # 同一分支上的新提交取消旧的运行；PR 用 ref 区分，避免互相取消
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: typecheck · test · validate · preview smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 不传 version：pnpm 版本由根 package.json 的 "packageManager": "pnpm@11.24.0" 决定。
+      # 传了会报 "Multiple versions of pnpm specified"（pages.yml 里记了这次踩坑）。
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # ① 类型：三包干净是硬门
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      # ② 测试：domain + content（含 bundle.json 穿过 schema 的一致性）
+      - name: Test
+        run: pnpm -r test
+
+      # ③ 内容 CI 校验：22 条规则（R1a/R1b/R1c + R2–R20）
+      #    单独列出而不靠 test 覆盖，是因为它同时是**内容审核状态的检查口**：
+      #    签过字的条目要在这里过 R19（reviewed 必须有 checked_by = human 的记录）。
+      - name: Validate content library
+        run: pnpm --filter @dlg/content validate
+
+      # ④ 预览站构建 + 冒烟：`build` 脚本 = contrast.mjs && vite build && smoke.mjs
+      #    即 CSS 对比度（30 项）与接线执行（16 项）都在这条命令里。
+      #    注意 apps/preview **没有 test 脚本**，所以 `pnpm -r test` 覆盖不到它 ——
+      #    少了这一步，预览站的回归只会在部署时才发现。
+      - name: Build preview (runs contrast + smoke)
+        run: pnpm --filter @dlg/preview build
+
+      # ⑤ 流水线工具（内容录入/审核/试玩预览，缺口清单 C2-2）
+      #    它也是「第一个要写的 UI」，因此和其余包一样受同一道门约束。
+      - name: Build studio (content pipeline tool)
+        run: pnpm --filter @dlg/studio build
+
+      # 失败时把真正有用的东西留下：facts 输出（权威数字）+ 校验器自己的结论
+      - name: Facts snapshot (always)
+        if: always()
+        run: node scripts/facts.mjs

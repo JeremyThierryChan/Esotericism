@@ -8,6 +8,9 @@ import { validateBundle } from '../src/validate/rules.js';
 import { scanForbiddenPhrases } from '../src/validate/forbidden.js';
 import { emptyBundle } from '../src/bundle.js';
 import type { TransferEdge } from '../src/layer1/transfer.js';
+import type { Provenance, Verification } from '../src/layer0/provenance.js';
+import type { Exercise } from '../src/layer3/exercise.js';
+import type { ExerciseTemplate } from '../src/layer3/exercise-template.js';
 import { fixtureSkill, fixtureSpec, humanProvenance, validBundle, withFormalisms, withSystemsAndSchools } from './fixtures.js';
 
 const ruleIds = (b: Parameters<typeof validateBundle>[0]) => validateBundle(b).errors.map((e) => e.rule);
@@ -98,6 +101,143 @@ describe('R19 · 升级 reviewed 必须有人工复核记录', () => {
       ],
     });
     expect(ruleIds(b)).not.toContain('R19');
+  });
+});
+
+/**
+ * R1/R19 的**覆盖范围**必须被测住。
+ *
+ * 起因：`Exercise` 与 `ExerciseTemplate` 的 schema 里都带 `provenance`（数据里也都有），
+ * 但 `validateBundle` 的 layer0Groups 曾经漏了这两组 → R1a/R1b/R1c/R19 对它们完全不生效。
+ * 也就是说：**题目可以被标成 `reviewed` 而没有任何人工复核记录，CI 照样通过。**
+ * 而题目正是玩家实际作答的对象，是 R19 最该管住的东西。
+ *
+ * 这类「声明了但没接上」的漏检不会自己报错，只会静默放过 —— 所以必须有测试锁住。
+ */
+describe('R1/R19 覆盖范围 · 带 provenance 的实体一个都不能漏检', () => {
+  /**
+   * 已升 reviewed 的 provenance。
+   *
+   * 注意类型：`Exercise`/`ExerciseTemplate` 用的是 zod 的**输出类型**，
+   * 所以带 `.default()` 的字段（`requires_process`、`difficulty`、`choices_mode`…）
+   * 在 TS 里是**必填**的 —— 缺了它们 typecheck 会报错（虽然运行时 schema 会补）。
+   * 这也是本组测试的价值之一：它顺手证明了「默认值不会让夹具写少字段」。
+   */
+  const reviewedProv = (over: Partial<Provenance> = {}): Provenance => ({
+    ...humanProvenance(true),
+    review_status: 'reviewed',
+    ...over,
+  });
+
+  const aiVerification = (): Verification => ({
+    claim: 'x',
+    source: { ref: 'y' },
+    checked_by: 'ai-candidate',
+    checked_at: '2026-09-19T00:00:00.000Z',
+    outcome: '证实',
+  });
+
+  const humanVerification = (): Verification => ({
+    claim: 'x',
+    source: { ref: 'y' },
+    checked_by: 'human',
+    checked_at: '2026-09-19T00:00:00.000Z',
+    outcome: '证实',
+  });
+
+  /** 一个纯 Rubric 题（无需 answer_key，避免引入规则相关规则干扰本组断言） */
+  const fixtureExercise = (over: Partial<Exercise> = {}): Exercise => ({
+    id: 'ex.coverage.1',
+    kind: '开放式解读',
+    prompt: '写出三张牌构成的序列叙事',
+    skill_ids: ['skill.t5.1'],
+    assessment_spec_id: 'spec.t5.1',
+    requires_process: false,
+    difficulty: '入门',
+    provenance: reviewedProv(),
+    ...over,
+  });
+
+  const fixtureTemplate = (over: Partial<ExerciseTemplate> = {}): ExerciseTemplate => ({
+    id: 'tpl.coverage.1',
+    name: '覆盖范围测试模板',
+    skill_ids: ['skill.t5.1'],
+    kind: '开放式解读',
+    assessment_spec_id: 'spec.t5.1',
+    rule_id: 'rule.coverage.1',
+    parameter_space: { mode: 'bit-combinations', bit_length: 3 },
+    prompt_template: '由三爻阴阳定八卦：{yao}',
+    answer_field: 'trigram',
+    choices_mode: 'none',
+    difficulty: '入门',
+    requires_process: false,
+    max_instances: 8,
+    provenance: reviewedProv(),
+    ...over,
+  });
+
+  it('exercise 处于 reviewed 但无人工复核 → 必须报 R19（此前会静默通过）', () => {
+    const b = validBundle();
+    b.exercises = [fixtureExercise()];
+    expect(ruleIds(b)).toContain('R19');
+  });
+
+  it('exercise 处于 reviewed 但只有 AI 复核 → 必须报 R19', () => {
+    const b = validBundle();
+    b.exercises = [fixtureExercise({ provenance: reviewedProv({ verifications: [aiVerification()] }) })];
+    expect(ruleIds(b)).toContain('R19');
+  });
+
+  it('exercise 有「人工 + 证实」→ 不报 R19', () => {
+    const b = validBundle();
+    b.exercises = [fixtureExercise({ provenance: reviewedProv({ verifications: [humanVerification()] }) })];
+    expect(ruleIds(b)).not.toContain('R19');
+  });
+
+  it('exercise_template 处于 reviewed 但无人工复核 → 必须报 R19（此前会静默通过）', () => {
+    const b = validBundle();
+    b.exercise_templates = [fixtureTemplate()];
+    expect(ruleIds(b)).toContain('R19');
+  });
+
+  it('exercise_template 有「人工 + 部分证实」→ 不报 R19', () => {
+    const b = validBundle();
+    b.exercise_templates = [
+      fixtureTemplate({
+        provenance: reviewedProv({
+          verifications: [{ ...humanVerification(), outcome: '部分证实' }],
+        }),
+      }),
+    ];
+    expect(ruleIds(b)).not.toContain('R19');
+  });
+
+  it('exercise 处于 reviewed 但来源为空 → 必须报 R1a', () => {
+    const b = validBundle();
+    b.exercises = [
+      fixtureExercise({ provenance: reviewedProv({ sources: [], verifications: [humanVerification()] }) }),
+    ];
+    expect(ruleIds(b)).toContain('R1a');
+  });
+
+  it('exercise 处于 reviewed 且 authored_by = ai-candidate → 必须报 R1b', () => {
+    const b = validBundle();
+    b.exercises = [
+      fixtureExercise({
+        provenance: reviewedProv({ authored_by: 'ai-candidate', verifications: [humanVerification()] }),
+      }),
+    ];
+    expect(ruleIds(b)).toContain('R1b');
+  });
+
+  it('exercise 处于 draft 且无来源 → 只警告 R1c，不阻塞（草稿阶段必须能存在）', () => {
+    const b = validBundle();
+    b.exercises = [
+      fixtureExercise({ provenance: { ...humanProvenance(false), review_status: 'draft' } }),
+    ];
+    const report = validateBundle(b);
+    expect(report.warnings.map((w) => w.rule)).toContain('R1c');
+    expect(report.ok).toBe(true);
   });
 });
 
