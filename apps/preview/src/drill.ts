@@ -11,6 +11,7 @@
  */
 import {
   appendToLedger,
+  type Attempt,
   computeSkillMastery,
   createRuleJudge,
   dimensionValueOrNull,
@@ -24,6 +25,8 @@ import {
   type ExerciseTemplate,
   type ScoreLedger,
 } from '@dlg/domain';
+
+import { recordAttempt, sessionId } from './store.js';
 
 const esc = (s: string): string =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
@@ -46,6 +49,8 @@ interface DrillState {
   } | null;
   answeredCount: number;
   correctCount: number;
+  /** 本题渲染出来的时刻，用于算耗时（校准认知负荷权重的输入） */
+  shownAt: number;
 }
 
 export interface DrillPlan {
@@ -148,7 +153,13 @@ export function renderDrillSection(bundle: ContentBundle): string {
 
 const VERDICT_LABEL: Record<string, string> = { hit: '命中', miss: '未命中', violation: '违规', uncertain: '待判' };
 
-export function wireDrill(bundle: ContentBundle, container: HTMLElement): void {
+export interface DrillHooks {
+  /** 每次成功写入作答后调用（用于刷新数据面板） */
+  onRecorded?: () => void;
+}
+
+export function wireDrill(bundle: ContentBundle, container: HTMLElement, hooks: DrillHooks = {}): void {
+  const onRecorded = hooks.onRecorded;
   const judge = createRuleJudge({ bundle });
   let plan = buildDrillPlan(bundle);
   if (!plan) return;
@@ -170,6 +181,7 @@ export function wireDrill(bundle: ContentBundle, container: HTMLElement): void {
       lastRender: null,
       answeredCount: 0,
       correctCount: 0,
+      shownAt: Date.now(),
     };
   }
 
@@ -212,6 +224,7 @@ export function wireDrill(bundle: ContentBundle, container: HTMLElement): void {
   function renderQuestion(): void {
     const inst = currentInstance();
     if (!inst) return;
+    state.shownAt = Date.now();
     el('#drill-prompt').textContent = inst.prompt;
     const choices = inst.answer_key.choices ?? [];
     el('#drill-choices').innerHTML = choices
@@ -315,6 +328,65 @@ export function wireDrill(bundle: ContentBundle, container: HTMLElement): void {
       skill_ids: inst.skill_ids,
       at: ev.created_at,
     });
+
+    // ── 落库：一次事务写入 attempt + evidence + score + mastery 快照 ──
+    // 三条硬约束（docs/待采集数据.md §五）：
+    //   ① attempt 只追加 ② evidence 是掌握度唯一入口 ③ 预定匹配写入时算好
+    const attemptId = `at.${sessionId()}.${state.answeredCount + 1}`;
+    const nowIso = new Date().toISOString();
+    const correctLabelForRecord = String((inst.answer_key.expected as { label?: string }).label ?? '');
+    const attempt: Attempt = {
+      id: attemptId,
+      exercise_id: inst.id,
+      template_id: inst.template_id,
+      exercise_kind: inst.kind,
+      session_id: sessionId(),
+      answer: { label: state.chosen },
+      chosen_label: state.chosen,
+      correct_label: correctLabelForRecord,
+      hints_used: 0,
+      latency_ms: Math.max(0, Date.now() - state.shownAt),
+      is_first_try: prior === 0,
+      submitted_at: nowIso,
+      judging: record,
+    };
+    const masteryAfterSnapshot = computeSkillMastery(skillId, state.evidence);
+    void recordAttempt({
+      attempt,
+      evidence: [ev],
+      score: {
+        attempt_id: attemptId,
+        exercise_id: inst.id,
+        template_id: inst.template_id,
+        points: score.points,
+        factors: { ...score.factors },
+        reasons: score.reasons,
+        at: nowIso,
+      },
+      mastery: masteryAfterSnapshot.dimensions
+        .filter((d) => d.samples > 0)
+        .map((d) => ({
+          at: nowIso,
+          skill_id: skillId,
+          dimension: d.dimension,
+          value: d.value,
+          samples: d.samples,
+          status: d.status,
+        })),
+    })
+      .then(() => onRecorded?.())
+      .catch((e: unknown) => {
+        // 存储失败不能影响学习体验，但必须让用户看见
+        const box = container.querySelector('#drill-result');
+        if (box) {
+          box.insertAdjacentHTML(
+            'beforeend',
+            `<p class="note warn">⚠️ 本次作答未能写入本地存储（${
+              e instanceof Error ? e.message : String(e)
+            }）—— 数据不会保存。</p>`,
+          );
+        }
+      });
 
     state.answered = true;
     state.answeredCount++;

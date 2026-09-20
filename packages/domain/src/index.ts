@@ -49,6 +49,7 @@ export * from './validate/forbidden.js';
 export * from './layer4/user-state.js';
 export * from './layer4/mastery.js';
 export * from './layer4/scoring.js';
+export * from './layer4/analysis.js';
 
 // ---- 确定性题目生成（规则密集型内容经济学的落地） ----
 export * from './generate/drill.js';

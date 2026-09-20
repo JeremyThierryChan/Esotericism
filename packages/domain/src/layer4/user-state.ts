@@ -72,14 +72,33 @@ export const judgingRecordSchema = z.object({
 });
 export type JudgingRecord = z.infer<typeof judgingRecordSchema>;
 
-/** 一次作答 */
+/**
+ * 一次作答。
+ *
+ * ⚠️ 设计要点（来自 `docs/待采集数据.md` §五 的三条硬约束）：
+ * **分析所需的字段必须随记录一起存下来，不能事后 join 内容库。**
+ * 理由：内容库会变（题目会被改、模板会被回调、预设易混对会增删），
+ * 事后 join 会得到「当时不是这样」的结果。所以这里冗余存
+ * `template_id` / `exercise_kind` / `correct_label` —— 宁可冗余，也要可复现。
+ */
 export const attemptSchema = z.object({
   id: z.string().min(1),
   exercise_id: z.string().min(1),
+  /** 生成题所属的题组（手写题没有）。用于按题组统计 */
+  template_id: z.string().min(1).optional(),
+  /**
+   * 题型。与 `Exercise.kind` 同值，但**冗余存一份**：
+   * 「耗时分布 → 校准认知负荷权重」是主要用途之一，缺了它就没法按题型看耗时。
+   */
+  exercise_kind: z.string().min(1),
   /** 匿名会话标识（预览阶段不做账号） */
   session_id: z.string().min(1),
   /** 用户答案：自由文本或结构化 */
   answer: z.unknown(),
+  /** 客观题：用户所选的选项标签 */
+  chosen_label: z.string().optional(),
+  /** 客观题：正确选项标签。**必须存**，否则题目改了就无法复盘 */
+  correct_label: z.string().optional(),
   /** 用户是否写下了推理解过程（ADR-0004：实战考过程规范） */
   process_text: z.string().optional(),
   hints_used: z.number().int().min(0).default(0),

@@ -24,6 +24,7 @@ import {
 // 走的是同一个 schema，因此与 CI 校验完全一致。
 import rawBundle from '@dlg/content/bundle.json';
 import { renderDrillSection, wireDrill } from './drill.js';
+import { renderDataPanel, wireDataPanel } from './data-panel.js';
 
 const appEl = document.querySelector<HTMLDivElement>('#app');
 if (!appEl) throw new Error('缺少 #app 容器');
@@ -120,7 +121,10 @@ function main(): void {
       <h2><span class="idx">04</span>这一条跨体系对应是怎么来的</h2>
       ${renderTransferEdge(bundle)}
 
-      <h2><span class="idx">05</span>溯源面板</h2>
+      <h2><span class="idx">05</span>采集到的数据（落库 · 本地）</h2>
+      ${renderDataPanel()}
+
+      <h2><span class="idx">06</span>溯源面板</h2>
       ${renderProvenance(bundle)}
 
       <footer>
@@ -130,8 +134,11 @@ function main(): void {
     </div>
   `;
 
+  const dataEl = document.querySelector<HTMLElement>('#data-panel');
+  const refreshData = dataEl ? wireDataPanel(bundle, dataEl) : undefined;
+
   const drillEl = document.querySelector<HTMLElement>('#drill');
-  if (drillEl) wireDrill(bundle, drillEl);
+  if (drillEl) wireDrill(bundle, drillEl, { ...(refreshData ? { onRecorded: () => void refreshData() } : {}) });
   wireRubricExercise(bundle, skeletonJudge);
 }
 
